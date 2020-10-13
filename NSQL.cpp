@@ -33,7 +33,7 @@ int NSQL::Connect() {
     }
 
     //output
-    // this is github testing
+    // this is github 
     //connect to SQL Server  
     //I am using a trusted connection and port 14808
     //it does not matter if you are using default or named instance
