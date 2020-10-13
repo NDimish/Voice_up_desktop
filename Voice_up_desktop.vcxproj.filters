@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="sourcecode">
+      <UniqueIdentifier>{98b49cfe-91d9-4568-b94a-00d394dedf88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sourcecode\Login-back code">
+      <UniqueIdentifier>{ea39ee15-53e4-42ba-8c39-aec8609aebb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\login.h code">
+      <UniqueIdentifier>{a46dc7aa-d32b-4fa6-a10f-abf74dff53cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\login databases">
+      <UniqueIdentifier>{81bb8343-a37f-444c-b3e1-453469bcd7ad}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Voice_up_launch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Vmain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rules.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Login.h">
+      <Filter>Header Files\login.h code</Filter>
+    </ClInclude>
+    <ClInclude Include="Structures.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Import.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NSQL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Voice_up_launch.cpp">
+      <Filter>sourcecode</Filter>
+    </ClCompile>
+    <ClCompile Include="Vmain.cpp">
+      <Filter>sourcecode</Filter>
+    </ClCompile>
+    <ClCompile Include="Login.cpp">
+      <Filter>sourcecode\Login-back code</Filter>
+    </ClCompile>
+    <ClCompile Include="NSQL.cpp">
+      <Filter>sourcecode</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ErrorLog.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
