@@ -31,6 +31,10 @@ END_EVENT_TABLE()
 
 Vmain::Vmain(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(40, 30), wxSize(250, 450))
 {
+	// main user created 
+	Login *Userinuse = new Login();
+
+
 	// panels
 	//for (int i = 0; i < 13; i++) {
 		//panels[i] = new wxPanel(this, wxID_HIGHEST + 1 + i);
@@ -177,14 +181,49 @@ void Vmain::LoginMain(wxCommandEvent& event) {
 
 BEGIN_EVENT_TABLE(login_frame_a, wxFrame)
 EVT_BUTTON(Register, login_frame_a::Registering)
+EVT_BUTTON(UserButton, login_frame_a::User1)
+EVT_BUTTON(UserButton1, login_frame_a::User2)
+EVT_BUTTON(UserButton2, login_frame_a::User3)
+EVT_BUTTON(UserButton3, login_frame_a::User4)
 END_EVENT_TABLE()
 
 login_frame_a::login_frame_a(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(300, 200))
-{
+{// get names
+
+	// =============================== edit to button
+
+	// below is the code to output the user buttons in order
+	wxButton* Button[4];
+	//panel
 	wxPanel* login_a = new wxPanel(this, wxID_ANY);
+	login_a->SetBackgroundColour(wxT("#C311D6"));
+	//title
+	wxStaticText* st1 = new wxStaticText(login_a, wxID_ANY, "  Select-User  ", wxPoint(50, 10), wxDefaultSize, wxALIGN_CENTRE);
+
+	std::string Usernames[4];
+	std::ofstream ErrorLog1;
+	ErrorLog1.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
+	Login::GetNames(Usernames);
+	for (int i = 0; i < 4; i++) {
+		if (Usernames[i] == "") {
+
+			wxButton* ButtonRegister = new wxButton(login_a, Register, _T("Register"), wxPoint(10, 30*(i+1)+10), wxDefaultSize, 0);
+			ErrorLog1 << "\n\nUsernames captcha ============================================================\n\n";
+			ErrorLog1 << "No users here\n";
+			break;
+		}
+		else {
+			Button[i] = new wxButton(login_a, UserButton+i, Usernames[i] , wxPoint(10, 30*(i+1)+10), wxDefaultSize, 0);
+			ErrorLog1 << "\n\nUsernames captcha ============================================================\n\n";
+			ErrorLog1 << Usernames[i];
+		}
+	}
+	ErrorLog1.close();
+
+	//====================================================== end edit to button
 
 	//std::string* Usernames = Login::GetNames();
-	wxButton* ButtonRegister = new wxButton(login_a, Register, _T("Register"), wxPoint(50, 100), wxDefaultSize, 0);
+	
 }
 
 
@@ -200,7 +239,30 @@ void login_frame_a::Registering(wxCommandEvent& event) {
 	//SetTopWindow(login);
 }
 
-//--------
+// set user whewn buttons clicked
+void login_frame_a::User1(wxCommandEvent& event){
+
+	Close(true);
+}
+
+void login_frame_a::User2(wxCommandEvent& event) {
+
+	Close(true);
+}
+
+void login_frame_a::User3(wxCommandEvent& event) {
+
+	Close(true);
+}
+
+void login_frame_a::User4(wxCommandEvent& event) {
+
+	Close(true);
+}
+
+
+
+//--------------------------------------------------------------------------
 
 // login frame b code 
 
@@ -359,6 +421,7 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 	// below saves user
 	newUser.UserID = 1;
 	Login::saveuser(newUser);
+	//Login::MainUser = &newUser;
 	Close(true);
 }
 

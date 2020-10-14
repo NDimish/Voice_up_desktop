@@ -10,10 +10,23 @@
 
 //functions:
 
+// constructor
+ NSQL::NSQL() {
+     //errotrlog open
+     ErrorLog.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
+}
+
+ //deconstructor
+
+NSQL:: ~NSQL() {
+    //errotrlog close
+    ErrorLog.close();
+ }
+
 
 // connect to server give pass or fail
 int NSQL::Connect() {
-    std::cout << "NSQL loading ======================================================================================================\n\n";
+    ErrorLog << "NSQL loading ======================================================================================================\n\n";
     //lol
 
     //initializations
@@ -22,18 +35,17 @@ int NSQL::Connect() {
 
     //allocations
     if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &sqlEnvHandle)) {
-        NSQL::Disconnect_from_sql(); std::cout << "problem1\n";
+        NSQL::Disconnect_from_sql(); ErrorLog << "problem1\n";
     }
 
     if (SQL_SUCCESS != SQLSetEnvAttr(sqlEnvHandle, SQL_ATTR_ODBC_VERSION, (SQLPOINTER)SQL_OV_ODBC3, 0)) {
-        NSQL::Disconnect_from_sql(); std::cout << "problem4\n";
+        NSQL::Disconnect_from_sql(); ErrorLog << "problem4\n";
     }
     if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_DBC, sqlEnvHandle, &sqlConnHandle)) {
-        NSQL::Disconnect_from_sql(); std::cout << "problem2\n";
+        NSQL::Disconnect_from_sql(); ErrorLog << "problem2\n";
     }
 
     //output
-    // this is github 
     //connect to SQL Server  
     //I am using a trusted connection and port 14808
     //it does not matter if you are using default or named instance
@@ -59,11 +71,11 @@ int NSQL::Connect() {
         break;
     case SQL_INVALID_HANDLE:
         NSQL::Disconnect_from_sql();
-        std::cout << "f1\n";
+        ErrorLog << "f1\n";
         return Fail;
     case SQL_ERROR:
         NSQL::Disconnect_from_sql();
-        std::cout << "f2\n";
+        ErrorLog << "f2\n";
         return Fail;
 
     default:
@@ -72,7 +84,7 @@ int NSQL::Connect() {
 
     if (SQL_SUCCESS != SQLAllocHandle(SQL_HANDLE_STMT, sqlConnHandle, &sqlStmtHandle)) {
         NSQL::Disconnect_from_sql();
-        std::cout << 'f3\n';
+        ErrorLog << 'f3\n';
         return Fail;
     }
     return Success;
@@ -88,10 +100,12 @@ int NSQL::Connect() {
 // below is the input from sql for a int output 
 int NSQL::statement(SQLCHAR* statement, int output[], int row) {
 
+    ErrorLog << "\nstatement(SQLCHAR* statement, int output[], int row)++++++++++++\n\n";
+
     // ensures sql worked
     if (SQL_SUCCESS != SQLExecDirect(sqlStmtHandle, statement, SQL_NTS)) {
         NSQL::Disconnect_from_sql();
-        std::cout << "fail in request \n";
+        ErrorLog << "fail in request \n";
         return Fail;
     }
 
@@ -105,7 +119,7 @@ int NSQL::statement(SQLCHAR* statement, int output[], int row) {
 
         // check data is fetched
         if (SQLFetch(sqlStmtHandle) != SQL_SUCCESS) {
-            std::cout << "fetch fail\n";
+            ErrorLog << "fetch fail\n";
             return Fail;
         }
 
@@ -133,7 +147,7 @@ int NSQL::statement(SQLCHAR* statement, int output[], int row) {
                     }
                 }
                 else
-                    std::cout << "fail transfer to sqltake\n";
+                    ErrorLog << "fail transfer to sqltake\n";
 
                 // if more data to fetch do agian
             }
@@ -158,11 +172,12 @@ int NSQL::statement(SQLCHAR* statement, int output[], int row) {
 
 // below is the input from sql for a string output 
 int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
+    ErrorLog << "\nstatement(SQLCHAR* statement, std::string& output, int row)++++++++++\n\n";
 
     // ensures sql worked
     if (SQL_SUCCESS != SQLExecDirect(sqlStmtHandle, statement, SQL_NTS)) {
         NSQL::Disconnect_from_sql();
-        std::cout << "fail in request \n";
+        ErrorLog << "fail in request \n";
         return Fail;
     }
 
@@ -175,7 +190,7 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
 
         // check data is  fetched
         if (SQLFetch(sqlStmtHandle) != SQL_SUCCESS) {
-            std::cout << "fetch fail\n";
+            ErrorLog << "fetch fail\n";
             return Fail;
         }
 
@@ -192,7 +207,7 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
                     }
                 }
                 else
-                    std::cout << "fail transfer to sqltake\n";
+                    ErrorLog << "fail transfer to sqltake\n";
 
             }
             // if more data to fetch do agian
@@ -217,8 +232,10 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
 
 
 
-// below is the code for inserting data
-int NSQL::statementW(SQLCHAR* statement, User input) {
+// below is the code for inserting data user
+int NSQL::statementW(SQLCHAR* statement, structures::User input) {
+    ErrorLog << "\nstatementW(SQLCHAR* statement, User input)++++++++++\n\n";
+
     // set in all the values (tailored for user)
     int retcode;
     int Age = input.Age;
@@ -233,10 +250,10 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
 
     // (SQLWCHAR*)L"INSERT INTO dbo.Users([Username]) VALUES (?)"
     if (SQL_SUCCESS == SQLPrepare(sqlStmtHandle, statement, SQL_NTS))
-        std::cout << "\npassed prepare\n";
+        ErrorLog << "\npassed prepare\n";
     else
     {
-        std::cout << "fail to prepare\n";
+        ErrorLog << "fail to prepare\n";
         return Fail;
     }
 
@@ -244,28 +261,28 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
 
     // below i bind the parameters
     if (SQL_SUCCESS == SQLBindParameter(sqlStmtHandle, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_LONGVARCHAR, 10, 0, (SQLPOINTER)Username.c_str(), Username.length(), NULL))
-        std::cout << "pass\n";
+        ErrorLog << "pass\n";
     else
     {
-        std::cout << "fail to insert\n";
+        ErrorLog << "fail to insert\n";
         return Fail;
     }
 
 
     if (SQL_SUCCESS == SQLBindParameter(sqlStmtHandle, 3, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_LONGVARCHAR, 10, 0, (SQLPOINTER)Sex.c_str(), Sex.length(), NULL))
-        std::cout << "pass\n";
+        ErrorLog << "pass\n";
     else
     {
-        std::cout << "fail to insert\n";
+        ErrorLog << "fail to insert\n";
         return Fail;
     }
 
 
     if (SQL_SUCCESS == SQLBindParameter(sqlStmtHandle, 4, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_LONGVARCHAR, 10, 0, (SQLPOINTER)Sing_Type.c_str(), Sing_Type.length(), NULL))
-        std::cout << "pass\n";
+        ErrorLog << "pass\n";
     else
     {
-        std::cout << "fail to insert\n";
+        ErrorLog << "fail to insert\n";
         return Fail;
     }
 
@@ -273,10 +290,10 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
 
 
     if (SQL_SUCCESS == SQLBindParameter(sqlStmtHandle, 1, SQL_PARAM_INPUT, SQL_INTEGER, SQL_INTEGER, 0, 0, &UserID, 0, NULL))
-        std::cout << "pass\n";
+        ErrorLog << "pass\n";
     else
     {
-        std::cout << "fail to insert\n";
+        ErrorLog << "fail to insert\n";
         return Fail;
     }
 
@@ -285,10 +302,10 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
 
 
     if (SQL_SUCCESS == SQLBindParameter(sqlStmtHandle, 5, SQL_PARAM_INPUT, SQL_C_LONG, SQL_INTEGER, 0, 0, &Age, 0, NULL))
-        std::cout << "pass\n";
+        ErrorLog << "pass\n";
     else
     {
-        std::cout << "fail to insert\n";
+        ErrorLog << "fail to insert\n";
         return Fail;
     }
 
@@ -301,7 +318,7 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
    // retcode = SQLExecute(sqlStmtHandle);
     if (SQL_SUCCESS != SQLExecute(sqlStmtHandle)) {
         NSQL::Disconnect_from_sql();
-        std::cout << "fail in request \n";
+        ErrorLog << "fail in request \n";
         return Fail;
     }
     else
@@ -318,17 +335,19 @@ int NSQL::statementW(SQLCHAR* statement, User input) {
 
 
 // below is the statements to recive a whole row of users. you can only get one row
-int NSQL::statement(SQLCHAR* statement, User& output) {
+int NSQL::statement(SQLCHAR* statement, structures::User& output) {
+    ErrorLog << "\nstatement(SQLCHAR* statement, User& output)++++++++++\n\n";
+
     // ensures sql worked
     if (SQL_SUCCESS != SQLExecDirect(sqlStmtHandle, statement, SQL_NTS)) {
         NSQL::Disconnect_from_sql();
-        std::cout << "fail in request \n";
+        ErrorLog << "fail in request \n";
         return Fail;
     }
     else {
         // check data is fetched
         if (SQLFetch(sqlStmtHandle) != SQL_SUCCESS) {
-            std::cout << "fetch fail\n";
+            ErrorLog << "fetch fail\n";
             return Fail;
         }
         // intialise temp variables for string
@@ -373,7 +392,7 @@ int NSQL::statement(SQLCHAR* statement, User& output) {
             output.Age = sqltakei;
         }
         else {
-            std::cout << "faliure in users copy";
+            ErrorLog << "faliure in users copy";
             return Fail;
 
         }
@@ -392,12 +411,18 @@ int NSQL::statement(SQLCHAR* statement, User& output) {
 
 // disconnect from server
 void NSQL::Disconnect_from_sql() {
+    ErrorLog << "\nNSQL::Disconnect_from_sql()++++++++++\n\n";
+
     SQLFreeHandle(SQL_HANDLE_STMT, sqlStmtHandle);
     SQLDisconnect(sqlConnHandle);
     SQLFreeHandle(SQL_HANDLE_DBC, sqlConnHandle);
     SQLFreeHandle(SQL_HANDLE_ENV, sqlEnvHandle);
 
-    std::cout << "\n\nNSQL finished ======================================================================================================\n\n";
+    ErrorLog << "\n\nNSQL finished ======================================================================================================\n\n";
+
+
+    // close errorlog
+    ErrorLog.close();
 }
 // class variables
 

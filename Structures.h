@@ -12,13 +12,36 @@
 //Global variables 
 //Structures used
 
-struct User {
-    int UserID;
-    std::string Username;
-    char SingType;
-    char Sex;
-    int Age;
+// the structures class holds the structures and has global or
+// static variables.
+
+class structures {
+
+public:
+    // structure user
+    struct User {
+        int UserID;
+        std::string Username;
+        char SingType;
+        char Sex;
+        int Age;
+
+
+    };
+
+    // handle Mainuser functions
+    static void SetMainUser(User input);
+    static structures::User GetMainUser();
+
+
+private:
+    static structures::User MainUser;
+
 };
+
+
+
+
 
 
 

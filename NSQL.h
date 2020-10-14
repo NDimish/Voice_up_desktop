@@ -21,10 +21,16 @@ private:
     SQLHANDLE sqlConnHandle;
     SQLHANDLE sqlStmtHandle;
     SQLCHAR retconstring[SQL_RETURN_CODE_LEN];
+    
+    // error logging
+    std::ofstream ErrorLog;
+    
 
     // functions
 
 public:
+    NSQL();
+    ~NSQL();
     // connects to database
     int Connect();
     //dissconnect from data base
@@ -40,9 +46,9 @@ public:
 
 
     // the statement below is to insert data for user
-    int statementW(SQLCHAR* statement, User input);
+    int statementW(SQLCHAR* statement, structures::User input);
     //gets entire row for user, can only get one row
-    int statement(SQLCHAR* statement, User& output);
+    int statement(SQLCHAR* statement, structures::User& output);
     // 
 
 };

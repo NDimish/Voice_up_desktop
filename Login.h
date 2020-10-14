@@ -16,15 +16,17 @@ class Login
 {
 private:
 
-	User MainUser;
+	
 
 public:
+	// variable
+	//static User MainUser;
 	Login();
 	~Login();
 
 	// functions
-	static void GetNames();
-	static void saveuser(User output);
+	static void GetNames(std::string names[]);
+	static void saveuser(structures::User output);
 
 };
 

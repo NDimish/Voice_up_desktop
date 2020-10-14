@@ -10,31 +10,90 @@
 //Functions definition
 //Main code
 //Function code
+
+
+
+
+
+
 Login::Login() {
+	//Login::MainUser = new User();
 
+}
+
+Login::~Login()
+{
 }
 
 
 
 
-// 
-void Login::GetNames() {
+//The function below simiply get the usernames from an Sql Database
+// Then send the names to the GUI to pring button
+void Login::GetNames(std::string names[]) {
+	//errotrlog open
+	std::ofstream ErrorLog2;
+	ErrorLog2.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
+	ErrorLog2 << "\n\nLogin Getnames ============================================================\n\n";
 
-	
+	NSQL Getnames;
+	std::string sqlout;
+	std::string temp;
+	Getnames.Connect();
+	if (1 != Getnames.statement((SQLCHAR*)"SELECT Username FROM Users ", sqlout)) {
+		ErrorLog2 << "\n\n COLUD NOT DO STATEMENT FOR LOGIN GETNAMES \n\n";
+		Getnames.Disconnect_from_sql();
+		ErrorLog2.close();
+		return;
+	}
+	else {
+		for (int i = 0; i < sqlout.length()+1; i++) {
+			if ( i%8 ==0 && i>0) {
+				temp += sqlout[i];
+				names[(i/8)-1] = temp;
+				temp = "";
+				ErrorLog2 << "names written\n";
+
+			}
+			else {
+				temp += sqlout[i];
+				ErrorLog2 << "temp written\n";
+			}
+
+		}
+	}
+
+	Getnames.Disconnect_from_sql();
+	ErrorLog2.close();
 }
-//The function above simiply get the usernames from an Sql Database
-// Then send the names to the GUI to pring buttons 
+ 
 
 
 // Status of completion null
 
 
 // saves new user
- void Login::saveuser(User output) {
+ void Login::saveuser(structures::User output) {
+
+	 // forr error logging
+	 std::ofstream ErrorLog2;
+	 ErrorLog2.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
+	 ErrorLog2 << "\n\nLogin svae user ============================================================\n\n";
+
 	NSQL temp;
 	temp.Connect();
 	temp.statementW((SQLCHAR*)"INSERT INTO dbo.Users([UserID],[Username],[Sex],[Sing_Type],[Age]) VALUES (?,?,?,?,?)", output);
 	temp.Disconnect_from_sql();
+	// setting this as main user
+	structures::SetMainUser(output);
+	structures::User x;
+	x = structures::GetMainUser();
+	ErrorLog2 << x.Username;
+	ErrorLog2 << "\n\nLogin svae user end ============================================================\n\n";
+	ErrorLog2.close();
 }
 // Status of completion done
 
+
+
+ // sets Main user

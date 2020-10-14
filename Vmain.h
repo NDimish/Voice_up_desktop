@@ -7,6 +7,8 @@
 #include "Structures.h"
 #include "Import.h"
 
+// namespace
+
 // main menue class runs when called 
 class Vmain : public wxFrame
 {
@@ -47,6 +49,10 @@ private:
 public:
 	login_frame_a(const wxString& title);
 	void Registering(wxCommandEvent& event);
+	void User1(wxCommandEvent& event);
+	void User2(wxCommandEvent& event);
+	void User3(wxCommandEvent& event);
+	void User4(wxCommandEvent& event);
 
 	DECLARE_EVENT_TABLE()
 
@@ -57,7 +63,7 @@ public:
 class login_frame_b : public wxFrame
 {
 private:
-	User newUser;
+	structures::User newUser;
 	int errorchk = 0;
 
 	wxPanel* login_b;
@@ -98,7 +104,8 @@ public:
 
 ///button ids
 enum {
-	login = wxID_HIGHEST + 1, VoiceTuner, Tests, Lessons, Graphing, Exit, Save, Register,F,M
+	login = wxID_HIGHEST + 1, VoiceTuner, Tests, Lessons, Graphing, Exit, 
+	UserButton, UserButton1, UserButton2, UserButton3,  Save, Register,F,M
 };
 
 

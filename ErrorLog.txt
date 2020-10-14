@@ -1,1 +1,71 @@
 
+NSQL loading ======================================================================================================
+
+
+statement(SQLCHAR* statement, std::string& output, int row)++++++++++
+
+
+NSQL::Disconnect_from_sql()++++++++++
+
+
+
+NSQL finished ======================================================================================================
+
+
+
+Login Getnames ============================================================
+
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+names written
+temp written
+
+
+Usernames captcha ============================================================
+
+yoyoy    
+
+Usernames captcha ============================================================
+
+No users here
+NSQL loading ======================================================================================================
+
+
+statement(SQLCHAR* statement, std::string& output, int row)++++++++++
+
+
+NSQL::Disconnect_from_sql()++++++++++
+
+
+
+NSQL finished ======================================================================================================
+
+
+
+Login Getnames ============================================================
+
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+names written
+temp written
+
+
+Usernames captcha ============================================================
+
+yoyoy    
+
+Usernames captcha ============================================================
+
+No users here
