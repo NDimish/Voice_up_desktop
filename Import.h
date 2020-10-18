@@ -10,6 +10,7 @@
 #include<sstream>
 #include <vector>
 #include<fstream>
+#include <kfr/math.hpp>
 
 // self made 
 #include "Structures.h"

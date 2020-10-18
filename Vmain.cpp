@@ -23,6 +23,7 @@
 BEGIN_EVENT_TABLE(Vmain, wxFrame)
 EVT_BUTTON(login, Vmain::LoginMain)
 EVT_BUTTON(Exit, Vmain::OnExit)
+EVT_BUTTON(VoiceTunerID, Vmain::VoiceTuner)
 END_EVENT_TABLE()
 
 
@@ -91,7 +92,7 @@ Vmain::Vmain(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(
 	ButtonLogin->SetBackgroundColour(red);
 
 	wxButton* ButtonVoiceTuner;
-	ButtonVoiceTuner = new wxButton(panel, VoiceTuner, _T("Voice Tuner"), wxPoint(34, 30), wxSize(175, 40), 0);
+	ButtonVoiceTuner = new wxButton(panel, VoiceTunerID, _T("Voice Tuner"), wxPoint(34, 30), wxSize(175, 40), 0);
 	ButtonVoiceTuner->SetBackgroundColour(oj);
 
 	wxButton* ButtonTests;
@@ -165,6 +166,12 @@ void Vmain::LoginMain(wxCommandEvent& event) {
 	//SetTopWindow(login);
 }
 
+void Vmain::VoiceTuner(wxCommandEvent& event) {
+	// open new window.
+	Voice_Tuner_frame* Voicetune = new Voice_Tuner_frame("Voice Tuner");
+	Voicetune->Show();
+}
+
 
 
 // Main end -------------------------------
@@ -194,6 +201,8 @@ login_frame_a::login_frame_a(const wxString& title) : wxFrame(nullptr, wxID_ANY,
 
 	// below is the code to output the user buttons in order
 	wxButton* Button[4];
+	//below is just a counter to tell if login b run what user id should be 
+	IDnum =0;
 	//panel
 	wxPanel* login_a = new wxPanel(this, wxID_ANY);
 	login_a->SetBackgroundColour(wxT("#C311D6"));
@@ -209,13 +218,14 @@ login_frame_a::login_frame_a(const wxString& title) : wxFrame(nullptr, wxID_ANY,
 
 			wxButton* ButtonRegister = new wxButton(login_a, Register, _T("Register"), wxPoint(10, 30*(i+1)+10), wxDefaultSize, 0);
 			ErrorLog1 << "\n\nUsernames captcha ============================================================\n\n";
-			ErrorLog1 << "No users here\n";
+			ErrorLog1 << "No users left to button\n";
 			break;
 		}
 		else {
 			Button[i] = new wxButton(login_a, UserButton+i, Usernames[i] , wxPoint(10, 30*(i+1)+10), wxDefaultSize, 0);
 			ErrorLog1 << "\n\nUsernames captcha ============================================================\n\n";
-			ErrorLog1 << Usernames[i];
+			ErrorLog1 << "buttoned" << Usernames[i];
+			IDnum += 1;
 		}
 	}
 	ErrorLog1.close();
@@ -234,7 +244,7 @@ void login_frame_a::Registering(wxCommandEvent& event) {
 	//panel_sizer->Hide(pane2);
 	//panel_sizer->Show(pane1);
 	Close(true);
-	login_frame_b* Register = new login_frame_b("login screen 2");
+	login_frame_b* Register = new login_frame_b("login screen 2",IDnum);
 	Register->Show();
 	//SetTopWindow(login);
 }
@@ -242,21 +252,25 @@ void login_frame_a::Registering(wxCommandEvent& event) {
 // set user whewn buttons clicked
 void login_frame_a::User1(wxCommandEvent& event){
 
+	Login::SetMainUser(1);
 	Close(true);
 }
 
 void login_frame_a::User2(wxCommandEvent& event) {
 
+	Login::SetMainUser(2);
 	Close(true);
 }
 
 void login_frame_a::User3(wxCommandEvent& event) {
 
+	Login::SetMainUser(3);
 	Close(true);
 }
 
 void login_frame_a::User4(wxCommandEvent& event) {
 
+	Login::SetMainUser(4);
 	Close(true);
 }
 
@@ -274,8 +288,10 @@ EVT_TOGGLEBUTTON(M, login_frame_b::Togglechange)
 EVT_TOGGLEBUTTON(F, login_frame_b::TogglechangeF)
 END_EVENT_TABLE()
 
-login_frame_b::login_frame_b(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(300, 250))
+login_frame_b::login_frame_b(const wxString& title, int Idnum) : wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(300, 250))
 {
+	// set idnum for when save pressed
+	IDnum = Idnum+1;
 	//panel
 	login_b = new wxPanel(this, wxID_ANY);
 	login_b->SetBackgroundColour(wxT("#C311D6"));
@@ -370,6 +386,7 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 
 
 
+
 	// checks dropdown choosen
 	if ((char)DropdownSing_Type->GetCurrentSelection() == 'ÿ') {
 		wxStaticText* st5 = new wxStaticText(login_b, wxID_ANY, "Error in your regestration ( Sing )          ", wxPoint(10, 190), wxDefaultSize, wxALIGN_CENTRE);
@@ -419,7 +436,7 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 	//st5->Refresh();
 
 	// below saves user
-	newUser.UserID = 1;
+	newUser.UserID = IDnum;
 	Login::saveuser(newUser);
 	//Login::MainUser = &newUser;
 	Close(true);
@@ -441,3 +458,58 @@ void login_frame_b::TogglechangeF(wxCommandEvent& event) {
 }
 
 
+
+// Login screen end ---------------------------------------------------------------------
+
+
+// Voice tuner -------------------------------------------------------------------
+
+
+// voice tune code
+//eventtable
+BEGIN_EVENT_TABLE(Voice_Tuner_frame, wxFrame)
+END_EVENT_TABLE()
+
+Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(800, 250)) {
+
+	// setting panels via seperate classes for panels
+	setting = new wxPanel(this, wxID_ANY);
+	wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
+
+	Lights = new Light_screen(setting);
+	Remote = new TuneRemote(setting);
+	
+
+	hbox->Add(Lights, 1, wxEXPAND | wxALL, 1);
+	hbox->Add(Remote, 1, wxEXPAND | wxALL, 6);
+	
+
+	setting->SetSizer(hbox);
+
+	this->Centre();
+
+
+}
+
+
+
+
+// panel remote code ------------------------------------------------
+TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(200, 150), wxBORDER_SIMPLE) {
+
+	this->SetBackgroundColour(wxT("#aaaaaa"));
+	
+	 m_parent = parent;
+
+}
+
+
+
+// panel for light panel code
+Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(600, -1), wxBORDER_SUNKEN) {
+
+	this->SetBackgroundColour(wxT("#C311D6"));
+	m_parent = parent;
+
+
+}

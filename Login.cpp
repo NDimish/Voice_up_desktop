@@ -97,3 +97,59 @@ void Login::GetNames(std::string names[]) {
 
 
  // sets Main user
+ void Login::SetMainUser(int ID) {
+
+
+	 // errorlogging
+	 std::ofstream ErrorLog2;
+	 ErrorLog2.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
+	 ErrorLog2 << "\n\nLogin setuser ============================================================\n\n";
+
+	 // structers::setmainuser, actualy set the user this is just for choosinf which user
+	 // get user name
+	 structures::User setting;
+	 NSQL open;
+	 open.Connect();
+	 switch (ID) {
+	 case 1:
+		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 1", setting))
+			 structures::SetMainUser(setting);
+		 else
+			 return;
+		 break;
+
+
+	 case 2:
+		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 2", setting))
+			 structures::SetMainUser(setting);
+		 else
+			 return;
+		 break;
+
+
+	 case 3:
+		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 3", setting))
+			 structures::SetMainUser(setting);
+		 else
+			 return;
+		 break;
+
+
+	 case 4:
+		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 4", setting))
+			 structures::SetMainUser(setting);
+		 else
+			 return;
+		 break;
+
+	 }
+	 open.Disconnect_from_sql();
+
+	 // errorlogging
+	 structures::User test = structures::GetMainUser();
+	 ErrorLog2 << test.Username;
+	 ErrorLog2 << "\n\nLogin set user end ============================================================\n\n";
+	 ErrorLog2.close();
+
+ }
+ //done

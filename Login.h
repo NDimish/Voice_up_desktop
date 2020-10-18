@@ -27,6 +27,8 @@ public:
 	// functions
 	static void GetNames(std::string names[]);
 	static void saveuser(structures::User output);
+	//setsmainuser
+	static void SetMainUser(int ID);
 
 };
 
