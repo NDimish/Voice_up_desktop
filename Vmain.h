@@ -179,8 +179,9 @@ public:
 
 ///button ids
 enum {
-	login = wxID_HIGHEST + 1, VoiceTunerID, Tests, Lessons, Graphing, Exit, 
-	UserButton, UserButton1, UserButton2, UserButton3,  Save, Register,F,M
+	login = wxID_HIGHEST + 1, VoiceTunerID, Tests, Lessons, Graphing, Exit,
+	UserButton, UserButton1, UserButton2, UserButton3, Save, Register, F, M,
+	NoteUp, NoteDown, OctaveUp, OctaveDown
 };
 
 

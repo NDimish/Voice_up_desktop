@@ -470,7 +470,7 @@ void login_frame_b::TogglechangeF(wxCommandEvent& event) {
 BEGIN_EVENT_TABLE(Voice_Tuner_frame, wxFrame)
 END_EVENT_TABLE()
 
-Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(800, 250)) {
+Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wxID_ANY, title, wxPoint(30, 40), wxSize(900, 250)) {
 
 	// setting panels via seperate classes for panels
 	setting = new wxPanel(this, wxID_ANY);
@@ -495,11 +495,15 @@ Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wx
 
 
 // panel remote code ------------------------------------------------
-TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(200, 150), wxBORDER_SIMPLE) {
+TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(300, 150), wxBORDER_SIMPLE) {
 
 	this->SetBackgroundColour(wxT("#aaaaaa"));
 	
 	 m_parent = parent;
+	 wxButton* NoteUpButton = new wxButton(this, NoteUp, wxT("Note Up"), wxPoint(195, 0));
+	 wxButton* NoteDownButton = new wxButton(this, NoteDown, wxT("Note Down"), wxPoint(0,0));
+	 wxButton* OctaveUpButton = new wxButton(this, OctaveUp, wxT("Octave Up"), wxPoint(195, 175));
+	 wxButton* OctaveDownButton = new wxButton(this, OctaveDown, wxT("Octave Down"), wxPoint(0, 175));
 
 }
 
