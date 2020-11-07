@@ -1,4 +1,4 @@
-
+//imports
 #include "Vmain.h"
 #include <fstream>
 #include "Login.h"
@@ -174,11 +174,11 @@ void Vmain::VoiceTuner(wxCommandEvent& event) {
 
 
 
-// Main end -------------------------------
+// Main end ==================================================================
 
 
 
-//Login screen -------------------------
+//Login screen ===============================================================
 
 
 // temp frame class
@@ -459,10 +459,10 @@ void login_frame_b::TogglechangeF(wxCommandEvent& event) {
 
 
 
-// Login screen end ---------------------------------------------------------------------
+// Login screen end ======================================================
 
 
-// Voice tuner -------------------------------------------------------------------
+// Voice tuner =====================================================
 
 
 // voice tune code
@@ -509,11 +509,36 @@ TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosi
 
 
 
-// panel for light panel code
+// panel for light panel code --------------------------------
 Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(600, -1), wxBORDER_SUNKEN) {
+
+
 
 	this->SetBackgroundColour(wxT("#C311D6"));
 	m_parent = parent;
 
+	// below is testing
+	wxButton* Notplay = new wxButton(this, Noteplay, wxT("Note Play"), wxPoint(270, 87.5));
+	Connect(Noteplay, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Light_screen::Noteplying));
+	test = new wxLed(this, wxID_ANY);
+	test->Disable();
+	Notefrequency = 0;
+	B = 0;
+}
+
+void Light_screen::Noteplying(wxCommandEvent& event){
+
+	// all below is testing
+	B += 20;
+	wxStaticText* example = new wxStaticText(this, wxID_ANY, "working", wxPoint(10, B), wxDefaultSize, wxALIGN_CENTRE);
+	if (Notefrequency == 0) {
+		test->Enable();
+		Notefrequency = 1;
+	}
+	else {
+		test->Disable();
+		Notefrequency = 0;
+	}
+	Refresh();
 
 }

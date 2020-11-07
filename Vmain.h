@@ -6,6 +6,7 @@
 #include <string>
 #include "Structures.h"
 #include "Import.h"
+#include "led.h"
 
 // namespace
 
@@ -40,8 +41,9 @@ public:
 
 
 
+//login =======================================================================
 
-// login frame 1
+// login frame 1 -------------------------------------
 
 class login_frame_a : public wxFrame
 {
@@ -63,7 +65,7 @@ public:
 };
 
 
-// login frame 2
+// login frame 2--------------------------------------
 class login_frame_b : public wxFrame
 {
 private:
@@ -107,8 +109,11 @@ public:
 
 
 
-// Voice tuner frame
+// Voice tuner frame=======================================================================
 
+// frame classes ----------------------------------------
+
+// remot------------------------
 class wxPanel;
 class TuneRemote : public wxPanel
 {
@@ -128,6 +133,8 @@ public:
 };
 
 
+
+//light screen----------------------------
 class wxPanel;
 class Light_screen :public wxPanel
 {
@@ -138,9 +145,20 @@ public:
 	//variables
 	wxPanel* m_parent;
 	wxButton* play_note;
+	wxLed* test;
 	//lights set 1
 	// light set 2
+	int Notefrequency;
+	char Notename;
+	int B;
+
+	//functions
+	// below plays the note once
+	void Noteplying(wxCommandEvent& event);
 };
+
+
+//mainframe for voice tuner ---------------------------
 
 //class wxPanel;
 
@@ -181,7 +199,7 @@ public:
 enum {
 	login = wxID_HIGHEST + 1, VoiceTunerID, Tests, Lessons, Graphing, Exit,
 	UserButton, UserButton1, UserButton2, UserButton3, Save, Register, F, M,
-	NoteUp, NoteDown, OctaveUp, OctaveDown
+	NoteUp, NoteDown, OctaveUp, OctaveDown, Noteplay
 };
 
 
