@@ -493,21 +493,103 @@ Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wx
 
 
 
-
+// note id for all functions to use below
+std::string Notenames[] = { "C", "D" ,"E" ,"F","A","B" };
+std::string Octavenames[] = { "1","2" ,"3", "4", "5", "6","7","8" };
 // panel remote code ------------------------------------------------
 TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(300, 150), wxBORDER_SIMPLE) {
+	
 
 	this->SetBackgroundColour(wxT("#aaaaaa"));
+	noteid = 0;
+	octaveid = 0;
+	notename = Notenames[noteid]+Octavenames[octaveid];
+	
 	
 	 m_parent = parent;
-	 wxButton* NoteUpButton = new wxButton(this, NoteUp, wxT("Note Up"), wxPoint(195, 0));
-	 wxButton* NoteDownButton = new wxButton(this, NoteDown, wxT("Note Down"), wxPoint(0,0));
-	 wxButton* OctaveUpButton = new wxButton(this, OctaveUp, wxT("Octave Up"), wxPoint(195, 175));
-	 wxButton* OctaveDownButton = new wxButton(this, OctaveDown, wxT("Octave Down"), wxPoint(0, 175));
+	 wxButton* NoteUpButton = new wxButton(this, NoteUp, wxT("Note Up"), wxPoint(195, 87.5));
+	 Connect(NoteUp, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_note_up));
+	 wxButton* NoteDownButton = new wxButton(this, NoteDown, wxT("Note Down"), wxPoint(0, 87.5));
+	 Connect(NoteDown, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_note_Down));
+	 wxButton* OctaveUpButton = new wxButton(this, OctaveUp, wxT("Octave Up"), wxPoint(97.5, 0));
+	 Connect(OctaveUp, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_Octave_up));
+	 wxButton* OctaveDownButton = new wxButton(this, OctaveDown, wxT("Octave Down"), wxPoint(97.5, 175));
+	 Connect(OctaveDown, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_Octave_Down));
 
+	 // changing font
+	 wxFont textfont(20, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
+	 this->SetFont(textfont);
+	  Note = new wxStaticText(this, wxID_ANY, notename, wxPoint(110, 80), wxSize(50,30), wxALIGN_CENTRE);
+	  Note->SetBackgroundColour(wxT("#C311D6"));
 }
 
+// functions for remote
+void TuneRemote::Change_note_up(wxCommandEvent& event) {
 
+	delete Note;
+	if (noteid ==  5 && octaveid !=7) {
+		noteid = 0;
+		octaveid +=1;
+	}
+	else if (noteid == 5 && octaveid == 7) {
+		noteid = 0;
+		octaveid =0;
+	
+	}
+	else
+		noteid +=1;
+	
+	notename = Notenames[noteid]+Octavenames[octaveid];
+	Note = new wxStaticText(this, wxID_ANY, notename, wxPoint(110, 80), wxSize(50, 30), wxALIGN_CENTRE);
+	Note->SetBackgroundColour(wxT("#C311D6"));
+}
+
+void TuneRemote::Change_note_Down(wxCommandEvent& event) {
+	delete Note;
+	if (noteid == 0 && octaveid != 0) {
+		noteid = 5;
+		octaveid -= 1;
+	}
+	else if (noteid == 0 && octaveid == 0) {
+		noteid = 0;
+		octaveid = 7;
+
+	}
+	else
+		noteid -= 1;
+
+	notename = Notenames[noteid] + Octavenames[octaveid];
+	Note = new wxStaticText(this, wxID_ANY, notename, wxPoint(110, 80), wxSize(50, 30), wxALIGN_CENTRE);
+	Note->SetBackgroundColour(wxT("#C311D6"));
+}
+
+void TuneRemote::Change_Octave_up(wxCommandEvent& event) {
+
+	delete Note;
+	if ( octaveid == 7) {
+		octaveid =0;
+	}
+	else
+		octaveid += 1;
+
+	notename = Notenames[noteid] + Octavenames[octaveid];
+	Note = new wxStaticText(this, wxID_ANY, notename, wxPoint(110, 80), wxSize(50, 30), wxALIGN_CENTRE);
+	Note->SetBackgroundColour(wxT("#C311D6"));
+}
+
+void TuneRemote::Change_Octave_Down(wxCommandEvent& event) {
+
+	delete Note;
+	if (octaveid == 0) {
+		octaveid = 7;
+	}
+	else
+		octaveid -= 1;
+
+	notename = Notenames[noteid] + Octavenames[octaveid];
+	Note = new wxStaticText(this, wxID_ANY, notename, wxPoint(110, 80), wxSize(50, 30), wxALIGN_CENTRE);
+	Note->SetBackgroundColour(wxT("#C311D6"));
+}
 
 // panel for light panel code --------------------------------
 Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(600, -1), wxBORDER_SUNKEN) {
@@ -519,26 +601,62 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 
 	// below is testing
 	wxButton* Notplay = new wxButton(this, Noteplay, wxT("Note Play"), wxPoint(270, 87.5));
-	Connect(Noteplay, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Light_screen::Noteplying));
-	test = new wxLed(this, wxID_ANY);
-	test->Disable();
+	Connect(Noteplay, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Light_screen::Lights));
+	//light set 1
+	Lightset1[0] = new wxLed(this, wxID_ANY, wxPoint(210, 87.5), wxSize(50,50), wxColour(00, 255, 00));
+	Lightset1[0]->Disable();
+	Lightset1[1] = new wxLed(this, wxID_ANY, wxPoint(140, 87.5), wxSize(50, 50), wxColour(20, 48, 226));
+	Lightset1[1]->Disable();
+	Lightset1[2] = new wxLed(this, wxID_ANY, wxPoint(80, 87.5), wxSize(50, 50), wxColour(255, 00, 230));
+	Lightset1[2]->Disable();
+	Lightset1[3] = new wxLed(this, wxID_ANY, wxPoint(20, 87.5), wxSize(50, 50), wxColour(226, 20, 20));
+	Lightset1[3]->Disable();
+
+	//light set 2
+	Lightset2[0] = new wxLed(this, wxID_ANY, wxPoint(380, 87.5), wxSize(50, 50), wxColour(00, 255, 00));
+	Lightset2[0]->Disable();
+	Lightset2[1] = new wxLed(this, wxID_ANY, wxPoint(440, 87.5), wxSize(50, 50), wxColour(20, 48, 226));
+	Lightset2[1]->Disable();
+	Lightset2[2] = new wxLed(this, wxID_ANY, wxPoint(500, 87.5), wxSize(50, 50), wxColour(255, 00, 230));
+	Lightset2[2]->Disable();
+	Lightset2[3] = new wxLed(this, wxID_ANY, wxPoint(550, 87.5), wxSize(50, 50), wxColour(226, 20, 20));
+	Lightset2[3]->Disable();
+
 	Notefrequency = 0;
-	B = 0;
+	lightsnum = 0;
 }
 
-void Light_screen::Noteplying(wxCommandEvent& event){
+void Light_screen::Lights(wxCommandEvent& event){
 
+	//for testing
+	if (lightsnum == 8)
+		lightsnum = 1;
+	else
+		lightsnum += 1;
 	// all below is testing
-	B += 20;
-	wxStaticText* example = new wxStaticText(this, wxID_ANY, "working", wxPoint(10, B), wxDefaultSize, wxALIGN_CENTRE);
-	if (Notefrequency == 0) {
-		test->Enable();
-		Notefrequency = 1;
+	//wxStaticText* example = new wxStaticText(this, wxID_ANY, "working", wxPoint(10, B), wxDefaultSize, wxALIGN_CENTRE);
+	for (int i = 0; i < 4; i++) {
+		Lightset1[i]->Disable();
+		Lightset2[i]->Disable();
+		Refresh();
+	}
+
+	if (lightsnum < 5) {
+		for (int i = 0; i < lightsnum; i++) {
+			Lightset1[i]->Enable();
+			Lightset1[i]->Enable();
+			Refresh();
+		}
 	}
 	else {
-		test->Disable();
-		Notefrequency = 0;
+		for (int i = 0; i < lightsnum-4; i++) {
+			Lightset2[i]->Enable();
+			Lightset2[i]->Enable();
+			Refresh();
+		}
 	}
-	Refresh();
+
 
 }
+
+void playingnote(wxCommandEvent& event) {}

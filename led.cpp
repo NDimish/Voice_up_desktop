@@ -19,7 +19,7 @@ EVT_PAINT(wxLed::OnPaint)
 END_EVENT_TABLE()
 
 //, wxColour dummyColour add
-wxLed::wxLed(wxWindow* parent, wxWindowID id, wxColour disabledColor, wxColour enableColour, const wxPoint& pos, const wxSize& size)
+wxLed::wxLed(wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, wxColour enableColour, wxColour disabledColor)
     :
     wxWindow(parent, id, pos, size),
     m_bitmap(NULL)
@@ -109,32 +109,32 @@ void wxLed::SetBitmap(wxString color)
     // width height num_colors chars_per_pixel
     sprintf(xpm[0], "%d %d %d 1", WX_LED_WIDTH, WX_LED_HEIGHT, WX_LED_COLORS);
     // colors
-    strncpy(xpm[1], "  c None", WX_LED_XPM_COLS);
-    strncpy(xpm[2], "- c #C0C0C0", WX_LED_XPM_COLS);
-    strncpy(xpm[3], "_ c #F8F8F8", WX_LED_XPM_COLS);
+    strncpy(xpm[1], "  c #C311D6", WX_LED_XPM_COLS);
+    strncpy(xpm[2], "- c #C311D6", WX_LED_XPM_COLS);
+    strncpy(xpm[3], "_ c #C311D6", WX_LED_XPM_COLS);
     strncpy(xpm[4], "* c #FFFFFF", WX_LED_XPM_COLS);
     strncpy(xpm[WX_LED_COLORS], "X c ", WX_LED_XPM_COLS);
     strncpy((xpm[WX_LED_COLORS]) + 4, color.char_str(), 8);
     // pixels
 
-    strncpy(xpm[WX_LED_COLORS + 1], "      -----      ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 2], "    ---------    ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 3], "   -----------   ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 4], "  -----XXX----_  ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 5], " ----XX**XXX-___ ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 6], " ---X***XXXXX___ ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 7], "----X**XXXXXX____", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 8], "---X**XXXXXXXX___", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 9], "---XXXXXXXXXXX___", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 10], "---XXXXXXXXXXX___", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 1], "      -----------      ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 2], "    ---------------    ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 3], "   -----------------   ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 4], "  -----XXXXXXXXX----_  ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 5], " ----XXXX****XXXX-___ ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 6], " ---XXX*****XXXXXXX___ ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 7], "----XXX****XXXXXXXX____", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 8], "---XXX****XXXXXXXXXX___", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 9], "---XXXXXXXXXXXXXXXXXX___", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 10], "---XXXXXXXXXXXXXXXXX___", WX_LED_XPM_COLS);
 
-    strncpy(xpm[WX_LED_COLORS + 11], "----XXXXXXXXX____", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 12], " ---XXXXXXXXX___ ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 13], " ---_XXXXXXX____ ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 14], "  _____XXX_____  ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 15], "   ___________   ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 16], "    _________    ", WX_LED_XPM_COLS);
-    strncpy(xpm[WX_LED_COLORS + 17], "      _____      ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 11], "----XXXXXXXXXXXXXXX____", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 12], " ---XXXXXXXXXXXXXXX___ ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 13], " ---_XXXXXXXXXXXXX____ ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 14], "  _____XXXXXXXXX_____  ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 15], "   _________________   ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 16], "    _______________    ", WX_LED_XPM_COLS);
+    strncpy(xpm[WX_LED_COLORS + 17], "      ___________      ", WX_LED_XPM_COLS);
 
     this->m_mutex.Lock();
     delete this->m_bitmap;

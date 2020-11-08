@@ -21,7 +21,7 @@ class wxLed : public wxWindow
 public:
 
 	//add , wxColour dummycoulur
-	wxLed(wxWindow* parent, wxWindowID id, wxColour disabledColor = wxColour(00, 00, 00), wxColour enableColour = wxColour(00, 255, 00), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+	wxLed(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, wxColour enableColour = wxColour(00, 255, 00), wxColour disabledColor = wxColour(00, 00, 00));
 	~wxLed();
 
 	void Enable(void);

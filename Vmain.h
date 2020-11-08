@@ -120,6 +120,7 @@ class TuneRemote : public wxPanel
 
 private:
 
+
 public:
 	TuneRemote(wxPanel*parent);
 	//variables
@@ -128,6 +129,16 @@ public:
 	wxButton* note_down;
 	wxButton* octave_up;
 	wxButton* octave_down;
+	wxStaticText* Note;
+	std::string notename;
+	int octaveid;
+	int noteid;
+
+	//functions
+	void Change_note_up(wxCommandEvent& event);
+	void Change_note_Down(wxCommandEvent& event);
+	void Change_Octave_up(wxCommandEvent& event);
+	void Change_Octave_Down(wxCommandEvent& event);
 
 
 };
@@ -145,16 +156,22 @@ public:
 	//variables
 	wxPanel* m_parent;
 	wxButton* play_note;
-	wxLed* test;
 	//lights set 1
+	wxLed* Lightset1[4];
+
 	// light set 2
+	wxLed* Lightset2[4];
+	
 	int Notefrequency;
 	char Notename;
-	int B;
+	int lightsnum;
 
 	//functions
 	// below plays the note once
-	void Noteplying(wxCommandEvent& event);
+
+	// below change parameters when ready
+	void Lights(wxCommandEvent& event);
+	void playingnote(wxCommandEvent& event);
 };
 
 
@@ -201,6 +218,7 @@ enum {
 	UserButton, UserButton1, UserButton2, UserButton3, Save, Register, F, M,
 	NoteUp, NoteDown, OctaveUp, OctaveDown, Noteplay
 };
+
 
 
 
