@@ -20,6 +20,7 @@
 
 NSQL:: ~NSQL() {
     //errotrlog close
+    Disconnect_from_sql();
     ErrorLog.close();
  }
 

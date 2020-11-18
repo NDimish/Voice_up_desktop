@@ -24,6 +24,9 @@ BEGIN_EVENT_TABLE(Vmain, wxFrame)
 EVT_BUTTON(login, Vmain::LoginMain)
 EVT_BUTTON(Exit, Vmain::OnExit)
 EVT_BUTTON(VoiceTunerID, Vmain::VoiceTuner)
+EVT_BUTTON(Tests, Vmain::Voice_Tests)
+EVT_BUTTON(Lessons, Vmain::Voice_Lessosn)
+EVT_BUTTON(Graphing, Vmain::Graphing__)
 END_EVENT_TABLE()
 
 
@@ -32,8 +35,14 @@ END_EVENT_TABLE()
 
 Vmain::Vmain(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(40, 30), wxSize(250, 450))
 {
+
+	// clear error log
+	std::ofstream ErrorLog;
+	ErrorLog.open("ErrorLog.txt", std::ofstream::out);
+	ErrorLog << "\nNew start ============================================================\n\n\n\n";
+	ErrorLog.close();
 	// main user created 
-	Login *Userinuse = new Login();
+	//Login *Userinuse = new Login();
 
 
 	// panels
@@ -156,6 +165,7 @@ Vmain::~Vmain() {}
 //functions
 void Vmain::OnExit(wxCommandEvent& event) {
 	Close(true); // closes the program
+	//exit;
 }
 
 void Vmain::LoginMain(wxCommandEvent& event) {
@@ -172,7 +182,30 @@ void Vmain::VoiceTuner(wxCommandEvent& event) {
 	Voicetune->Show();
 }
 
+void Vmain::Voice_Tests(wxCommandEvent& event) {
+	Error_screens* Error = new Error_screens(1);
+	if (Error->Get_check() == false)
+		return;
+	Voice_Tests_frame* tester = new Voice_Tests_frame("tests");
+	tester->Show();
+}
 
+void Vmain::Voice_Lessosn(wxCommandEvent& event) {
+	Error_screens* Error = new Error_screens(1);
+	if (Error->Get_check() == false)
+		return;
+	Voice_Tests_frame* Lesson = new Voice_Tests_frame("Lesson");
+	Lesson->Show();
+}
+
+void Vmain::Graphing__(wxCommandEvent& event) {
+	Error_screens* Error = new Error_screens(1);
+	if (Error->Get_check() == false)
+		return;
+	Error-> ~Error_screens();
+	Graph_frames* Graph = new Graph_frames("Graphing module");
+	Graph->Show();
+}
 
 // Main end ==================================================================
 
@@ -284,6 +317,7 @@ void login_frame_a::User4(wxCommandEvent& event) {
 
 BEGIN_EVENT_TABLE(login_frame_b, wxFrame)
 EVT_BUTTON(Save, login_frame_b::SaveNewUser)
+EVT_BUTTON(Exit, login_frame_b::OnExit)
 EVT_TOGGLEBUTTON(M, login_frame_b::Togglechange)
 EVT_TOGGLEBUTTON(F, login_frame_b::TogglechangeF)
 END_EVENT_TABLE()
@@ -297,7 +331,8 @@ login_frame_b::login_frame_b(const wxString& title, int Idnum) : wxFrame(nullptr
 	login_b->SetBackgroundColour(wxT("#C311D6"));
 
 	//widgits
-	wxButton* ButtonSave = new wxButton(login_b, Save, _T("Save"), wxPoint(50, 160), wxDefaultSize, 0);
+	wxButton* ButtonSave = new wxButton(login_b, Save, _T("Save"), wxPoint(40, 160), wxDefaultSize, 0);
+	wxButton* ButtonExit = new wxButton(login_b, Exit, _T("Exit"), wxPoint(120, 160), wxDefaultSize, 0);
 
 
 
@@ -457,6 +492,11 @@ void login_frame_b::TogglechangeF(wxCommandEvent& event) {
 		Female = 0;
 }
 
+//exit
+void login_frame_b::OnExit(wxCommandEvent& event) {
+	Close(true); // closes the program
+}
+
 
 
 // Login screen end ======================================================
@@ -478,10 +518,14 @@ Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wx
 
 	Lights = new Light_screen(setting);
 	Remote = new TuneRemote(setting);
-	
+
+	// allows remote to control exit
+	Remote->setframe(this);
 
 	hbox->Add(Lights, 1, wxEXPAND | wxALL, 1);
 	hbox->Add(Remote, 1, wxEXPAND | wxALL, 6);
+	//openstream
+	
 	
 
 	setting->SetSizer(hbox);
@@ -489,23 +533,30 @@ Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wx
 	this->Centre();
 
 
+
+}
+
+// functions for voice tune frame
+void Voice_Tuner_frame::OnExit(wxCommandEvent& event) {
+	Close(true);
 }
 
 
 
 // note id for all functions to use below
-std::string Notenames[] = { "C", "D" ,"E" ,"F","A","B" };
+std::string Notenames[] = { "C","C#", "D" , "D#", "E" ,"F", "F#","G","G#","A", "A#","B" };
 std::string Octavenames[] = { "1","2" ,"3", "4", "5", "6","7","8" };
 // panel remote code ------------------------------------------------
 TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosition, wxSize(300, 150), wxBORDER_SIMPLE) {
-	
+	//wx size does nothing at the moment
 
 	this->SetBackgroundColour(wxT("#aaaaaa"));
+	// starting note
 	noteid = 0;
 	octaveid = 0;
 	notename = Notenames[noteid]+Octavenames[octaveid];
 	
-	
+	//buttons and mappings
 	 m_parent = parent;
 	 wxButton* NoteUpButton = new wxButton(this, NoteUp, wxT("Note Up"), wxPoint(195, 87.5));
 	 Connect(NoteUp, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_note_up));
@@ -515,6 +566,9 @@ TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosi
 	 Connect(OctaveUp, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_Octave_up));
 	 wxButton* OctaveDownButton = new wxButton(this, OctaveDown, wxT("Octave Down"), wxPoint(97.5, 175));
 	 Connect(OctaveDown, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::Change_Octave_Down));
+	 wxButton*ExitButton = new wxButton(this, Exit, wxT("Exit"), wxPoint(195,175));
+	 ExitButton->SetBackgroundColour(wxT("#FF0000"));
+	 Connect(Exit, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(TuneRemote::OnExit));
 
 	 // changing font
 	 wxFont textfont(20, wxFONTFAMILY_MODERN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD);
@@ -524,14 +578,15 @@ TuneRemote::TuneRemote(wxPanel* parent) :wxPanel(parent, wxID_ANY, wxDefaultPosi
 }
 
 // functions for remote
+// below functions to change note or actave. if on max start from min and vice versa
 void TuneRemote::Change_note_up(wxCommandEvent& event) {
 
 	delete Note;
-	if (noteid ==  5 && octaveid !=7) {
+	if (noteid ==  11 && octaveid !=7) {
 		noteid = 0;
 		octaveid +=1;
 	}
-	else if (noteid == 5 && octaveid == 7) {
+	else if (noteid == 11 && octaveid == 7) {
 		noteid = 0;
 		octaveid =0;
 	
@@ -547,7 +602,7 @@ void TuneRemote::Change_note_up(wxCommandEvent& event) {
 void TuneRemote::Change_note_Down(wxCommandEvent& event) {
 	delete Note;
 	if (noteid == 0 && octaveid != 0) {
-		noteid = 5;
+		noteid = 11;
 		octaveid -= 1;
 	}
 	else if (noteid == 0 && octaveid == 0) {
@@ -591,6 +646,14 @@ void TuneRemote::Change_Octave_Down(wxCommandEvent& event) {
 	Note->SetBackgroundColour(wxT("#C311D6"));
 }
 
+void TuneRemote::OnExit(wxCommandEvent& event) {
+	frame->Close(true);
+}
+
+void TuneRemote::setframe(wxFrame* frame_m) {
+	frame = frame_m;
+}
+
 // panel for light panel code --------------------------------
 Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1), wxSize(600, -1), wxBORDER_SUNKEN) {
 
@@ -600,8 +663,9 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 	m_parent = parent;
 
 	// below is testing
+	//button and mapping
 	wxButton* Notplay = new wxButton(this, Noteplay, wxT("Note Play"), wxPoint(270, 87.5));
-	Connect(Noteplay, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Light_screen::Lights));
+	Connect(Noteplay, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Light_screen::playingnote));
 	//light set 1
 	Lightset1[0] = new wxLed(this, wxID_ANY, wxPoint(210, 87.5), wxSize(50,50), wxColour(00, 255, 00));
 	Lightset1[0]->Disable();
@@ -622,32 +686,47 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 	Lightset2[3] = new wxLed(this, wxID_ANY, wxPoint(550, 87.5), wxSize(50, 50), wxColour(226, 20, 20));
 	Lightset2[3]->Disable();
 
+	// frequency being used and lights to show on startup
 	Notefrequency = 0;
+	// 1-4 is right side , 5-8 left side, 9 is mid
 	lightsnum = 0;
 }
 
-void Light_screen::Lights(wxCommandEvent& event){
+
+void Light_screen::Lights(){
 
 	//for testing
-	if (lightsnum == 8)
+	if (lightsnum == 9)
 		lightsnum = 1;
 	else
 		lightsnum += 1;
-	// all below is testing
+	// all below is testing in comment
 	//wxStaticText* example = new wxStaticText(this, wxID_ANY, "working", wxPoint(10, B), wxDefaultSize, wxALIGN_CENTRE);
+
+	// resets lights
 	for (int i = 0; i < 4; i++) {
 		Lightset1[i]->Disable();
 		Lightset2[i]->Disable();
 		Refresh();
 	}
 
-	if (lightsnum < 5) {
-		for (int i = 0; i < lightsnum; i++) {
-			Lightset1[i]->Enable();
-			Lightset1[i]->Enable();
-			Refresh();
+	// if voice is perfec (9) two lights show
+	if (lightsnum == 9) {
+		Lightset1[0]->Enable();
+		Lightset2[0]->Enable();
+		Refresh();
+	}
+
+	// enabling the right side lights
+	else if (lightsnum < 5) {
+			for (int i = 0; i < lightsnum; i++) {
+				Lightset1[i]->Enable();
+				Lightset1[i]->Enable();
+				Refresh();
 		}
 	}
+
+	// enabling left side lights
 	else {
 		for (int i = 0; i < lightsnum-4; i++) {
 			Lightset2[i]->Enable();
@@ -659,4 +738,201 @@ void Light_screen::Lights(wxCommandEvent& event){
 
 }
 
-void playingnote(wxCommandEvent& event) {}
+void Light_screen::playingnote(wxCommandEvent& event) {
+
+	Light_screen::Lights();
+}
+
+
+// Voice tuner end ======================================================
+
+
+// Tests tuner =====================================================
+
+Voice_Tests_frame::Voice_Tests_frame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(40, 30), wxSize(250, 450)) {
+	TestrollPanel = new wxPanel(this, wxID_ANY);
+	//wxButton* buttontests = new wxButton(TestrollPanel, wxID_ANY,wxT("Tests"));
+
+}
+
+
+
+
+
+
+// Tests tuner ======================================================
+
+
+// graphs =====================================================
+
+
+//event table
+BEGIN_EVENT_TABLE(Graph_frames, wxFrame)
+EVT_BUTTON(onwards + 1, Graph_frames::Buttonevent1)
+EVT_BUTTON(onwards + 2, Graph_frames::Buttonevent2)
+EVT_BUTTON(onwards + 3, Graph_frames::Buttonevent3)
+EVT_BUTTON(onwards + 4, Graph_frames::Buttonevent4)
+EVT_BUTTON(onwards + 5, Graph_frames::Buttonevent5)
+EVT_BUTTON(onwards + 6, Graph_frames::Buttonevent6)
+EVT_BUTTON(Back_screen, Graph_frames::Back)
+EVT_BUTTON(Exit, Graph_frames::OnExit)
+END_EVENT_TABLE()
+
+// string names
+std::string Graph_frame_text[][6] = { {"C","C#", "D" , "D#", "E" ,"F"},{"F#","G","G#","A", "A#","B"},{"r","q","w","f", "g","h"} };
+Graph_frames::Graph_frames(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(40, 30), wxSize(250, 450)) {
+	
+	current_screen = 0;
+	Main_panel = new wxPanel(this, wxID_ANY);
+	// for test b = 10;
+	
+	Set_buttons();
+
+	this->Show();
+}
+
+
+//functions 
+void Graph_frames::Set_buttons() {
+
+	// reset buttons
+	for (int i = 0; i < 6; i++) {
+		delete Buttonset[i];
+	}
+	delete ButtonExit;
+
+	if (current_screen != 3) {
+		for (int i = 0; i < 6; i++) {
+			if (i % 2 == 0) {
+				Buttonset[i] = new wxButton(Main_panel, i + 1 + onwards, Graph_frame_text[current_screen][i], wxPoint(34, (i + 1) * 10));
+			}
+			else {
+				Buttonset[i] = new wxButton(Main_panel, i + 1 + onwards, Graph_frame_text[current_screen][i], wxPoint(104.5, i * 10));
+
+			}
+		}
+	}
+	if (current_screen == 0 || current_screen == 3)
+		ButtonExit = new wxButton(Main_panel, Exit,"Exit");
+	else
+		ButtonExit = new wxButton(Main_panel, Back_screen,"Previous");
+
+	//Connect(onwards+1, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Graph_frames::test));
+	// for testing b += 1; wxStaticText* example = new wxStaticText(Main_panel, wxID_ANY, "working", wxPoint(10, b), wxDefaultSize, wxALIGN_CENTRE);
+	Refresh();
+}
+
+// button fuctions ( change soon)
+void Graph_frames::Buttonevent1(wxCommandEvent& event) {
+	selection[current_screen] = 1;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+}
+
+void Graph_frames::Buttonevent2(wxCommandEvent& event) {
+	selection[current_screen] = 2;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+}
+
+void Graph_frames::Buttonevent3(wxCommandEvent& event) {
+	selection[current_screen] = 3;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+}
+
+void Graph_frames::Buttonevent4(wxCommandEvent& event) {
+	selection[current_screen] = 4;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+
+}
+
+void Graph_frames::Buttonevent5(wxCommandEvent& event) {
+	selection[current_screen] = 5;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+}
+
+void Graph_frames::Buttonevent6(wxCommandEvent& event) {
+	selection[current_screen] = 6;
+	if (current_screen == 3)
+		return;
+	else {
+		current_screen += 1;
+		Set_buttons();
+	}
+
+}
+
+void Graph_frames::Back(wxCommandEvent& event) {
+	current_screen -= 1;
+	Set_buttons();
+}
+
+void Graph_frames::OnExit(wxCommandEvent& event) {
+
+	Close(true);
+}
+
+
+
+
+
+// graphs end=========================================
+
+
+// error screens ==========================================
+ Error_screens::Error_screens(int choice) : wxFrame(nullptr, wxID_ANY, "no user here", wxPoint(30, 40), wxSize(300, 200)) {
+
+	 this->SetBackgroundColour(wxT("#C311D6"));
+	Check_Mainuser_active();
+}
+
+
+void Error_screens::Check_Mainuser_active()  {
+	structures::User temp;
+	temp = structures::GetMainUser();
+
+	if (temp.Age == NULL) {
+		wxPanel* Error = new wxPanel(this, wxID_ANY);
+		wxStaticText* st1 = new wxStaticText(Error, wxID_ANY, "  Please log in  ", wxPoint(50, 10), wxDefaultSize, wxALIGN_CENTRE);
+		exit = new wxButton(Error, Exit_error, "Exit", wxPoint(50, 30));
+		exit->SetBackgroundColour(wxT("#FF0000"));
+		Connect(Exit_error, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Error_screens::close_error));
+
+
+		this->Show();
+		check = false;
+	}
+	else
+		check = true;
+}
+
+void Error_screens::close_error(wxCommandEvent& event) {
+	Close(true);
+}
+
+bool Error_screens::Get_check() {
+	return check;
+}

@@ -1,4 +1,8 @@
 
+New start ============================================================
+
+
+
 NSQL loading ======================================================================================================
 
 
@@ -25,19 +29,32 @@ temp written
 temp written
 names written
 temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+temp written
+names written
+temp written
+temp written
 
 
 Usernames captcha ============================================================
 
-yoyoy    
+buttonedNathan   
 
 Usernames captcha ============================================================
 
-No users here
-NSQL loading ======================================================================================================
+buttonedhi!     
+
+Usernames captcha ============================================================
+
+No users left to button
+Main user is set tohi!      NSQL loading ======================================================================================================
 
 
-statement(SQLCHAR* statement, std::string& output, int row)++++++++++
+statement(SQLCHAR* statement, User& output)++++++++++
 
 
 NSQL::Disconnect_from_sql()++++++++++
@@ -48,24 +65,9 @@ NSQL finished ==================================================================
 
 
 
-Login Getnames ============================================================
+Login setuser ============================================================
 
-temp written
-temp written
-temp written
-temp written
-temp written
-temp written
-temp written
-temp written
-names written
-temp written
+hi!      
 
+Login set user end ============================================================
 
-Usernames captcha ============================================================
-
-yoyoy    
-
-Usernames captcha ============================================================
-
-No users here
