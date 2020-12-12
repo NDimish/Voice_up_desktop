@@ -7,9 +7,14 @@
 #include "Structures.h"
 #include "Import.h"
 #include "led.h"
+#include<thread>
 
 // namespace
 
+class Graph_frames;
+class Voice_Tuner_frame;
+class Error_screens;
+class Voice_Tests_frame;
 // main menue class runs when called 
 class Vmain : public wxFrame
 {
@@ -21,6 +26,15 @@ private:
 	wxPanel* pane1;
 	wxPanel* panels[13];
 	wxBoxSizer* panel_sizer;
+
+	wxPanel* bob;
+	// other module classes
+
+	Voice_Tuner_frame* Voicetune;
+	Error_screens* Error;
+	Voice_Tests_frame* tester;
+	Voice_Tests_frame* Lesson;
+	Graph_frames* Graph;
 
 	
 public:
@@ -97,6 +111,7 @@ public:
 	//functions
 	// save user
 	void SaveNewUser(wxCommandEvent& event);
+	void OutputError(wxStaticText* st5);
 	// ensure one toggle
 	void Togglechange(wxCommandEvent& event);
 	void TogglechangeF(wxCommandEvent& event);
@@ -120,40 +135,6 @@ public:
 
 // frame classes ----------------------------------------
 
-// remot------------------------
-class wxPanel;
-class TuneRemote : public wxPanel
-{
-
-private:
-	//variables widgits
-	wxFrame* frame;
-	wxPanel* m_parent;
-	wxButton* note_up;
-	wxButton* note_down;
-	wxButton* octave_up;
-	wxButton* octave_down;
-	wxStaticText* Note;
-	std::string notename;
-
-public:
-	TuneRemote(wxPanel*parent);
-	// variables
-	int octaveid;
-	int noteid;
-
-	//functions
-	void Change_note_up(wxCommandEvent& event);
-	void Change_note_Down(wxCommandEvent& event);
-	void Change_Octave_up(wxCommandEvent& event);
-	void Change_Octave_Down(wxCommandEvent& event);
-	void OnExit(wxCommandEvent& event);
-	void setframe(wxFrame* frame_m);
-
-
-};
-
-
 
 //light screen----------------------------
 class wxPanel;
@@ -168,21 +149,68 @@ private:
 
 	// light set 2
 	wxLed* Lightset2[4];
+
+	// if the note is the same dont refresh lights counter
+	int Lightson;
 public:
 	Light_screen(wxPanel* parent);
 	
 	
-	int Notefrequency;
+	float Notefrequency;
 	char Notename;
-	int lightsnum;
+	//int notenumber;
+	bool exit;
 
 	//functions
 	// below plays the note once
 
 	// below change parameters when ready
-	void Lights();
+	void Lights(int lightsnum);
 	void playingnote(wxCommandEvent& event);
 };
+
+
+
+
+
+// remote------------------------
+class wxPanel;
+class TuneRemote : public wxPanel
+{
+
+private:
+	//variables widgits
+	wxFrame* frame;
+	wxPanel* m_parent;
+	wxButton* note_up;
+	wxButton* note_down;
+	wxButton* octave_up;
+	wxButton* octave_down;
+	wxStaticText* Note;
+	std::string notename;
+	std::thread* Toclose;
+
+public:
+	TuneRemote(wxPanel* parent, Light_screen* lights, std::thread* thread);
+	// variables
+	int octaveid;
+	int noteid;
+	Light_screen* LightScreen;
+
+	//functions
+	void Change_note_up(wxCommandEvent& event);
+	void Change_note_Down(wxCommandEvent& event);
+	void Change_Octave_up(wxCommandEvent& event);
+	void Change_Octave_Down(wxCommandEvent& event);
+	void OnExit(wxCommandEvent& event);
+	void setframe(wxFrame* frame_m);
+
+
+};
+
+
+
+
 
 
 //mainframe for voice tuner ---------------------------
@@ -200,7 +228,7 @@ public:
 	
 	// contructor
 	Voice_Tuner_frame(const wxString& title);
-	void OnExit(wxCommandEvent& event);
+	//void OnExit(wxCommandEvent& event);
 
 
 	DECLARE_EVENT_TABLE()
@@ -219,15 +247,34 @@ public:
 
 // Tests frames=======================================================================
 
-class Voice_Tests_frame : public wxFrame {
+class Voice_Tests_frame : public wxFrame{
 private:
-	wxPanel* TestrollPanel;
+	wxScrolledWindow* Testroller;
+	structures::Block testgame[20];
 
 public:
 	Voice_Tests_frame(const wxString& title);
+	//functions
+	void OnExit(wxCommandEvent& event);
+	void TestRun(wxCommandEvent& event);
+
 };
 
-//==
+
+//-------------------
+
+// game class
+class Voice_game:public wxFrame {
+
+private:
+	wxPanel* Gamepanel;
+
+public:
+	Voice_game(int DataID);
+	void RunExitScoreWindow(int score);
+};
+
+//=============================================
 
 
 
@@ -247,12 +294,16 @@ private:
 	wxPanel* Main_panel;
 	wxButton* Buttonset[6];
 	wxButton* ButtonExit;
+	//wxButton* ButtonExit2;
+	wxStaticText* title;
+
+	// holds what screen and the selection per screen
 	int current_screen;
 	int selection[2];
 	// for testing int b;
 public:
 	Graph_frames(const wxString& title);
-	void Set_buttons();
+	void Set_buttons(bool firstIntialize = false);
 	//void test(wxCommandEvent& event);
 	// button event stuff
 	void Buttonevent1(wxCommandEvent& event);
@@ -281,6 +332,8 @@ public:
 
 
 ///button ids
+/// // global file variable
+// Below is the coulouring for the background
 enum {
 	login = wxID_HIGHEST + 1, VoiceTunerID, Tests, Lessons, Graphing, Exit,
 	UserButton, UserButton1, UserButton2, UserButton3, Save, Register, F, M,
@@ -308,6 +361,12 @@ public:
 	void Check_Mainuser_active();
 	void close_error(wxCommandEvent& event);
 	bool Get_check();
+
+	// function for error log
+	static void Error_log(std::string input, int x[]);
+
+	static void Error_log(std::string input);
+	static void Error_log(int input);
 
 
 };

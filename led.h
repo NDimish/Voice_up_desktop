@@ -28,6 +28,7 @@ public:
 	void Disable(void);
 	void SetColor(wxColour rgb);
 	bool IsEnabled(void);
+	bool on;
 
 protected:
 

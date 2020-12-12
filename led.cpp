@@ -41,6 +41,7 @@ void wxLed::Enable(void)
 {
     wxWindow::Enable(true);
     this->SetBitmap(this->m_Enable.GetAsString(wxC2S_HTML_SYNTAX));
+    on = true;
 }
 
 //Added by PJG
@@ -59,6 +60,7 @@ void wxLed::Disable(void)
 {
     wxWindow::Enable(false);
     this->SetBitmap(this->m_Disable.GetAsString(wxC2S_HTML_SYNTAX));
+    on = false;
 }
 
 void wxLed::SetColor(wxColour rgb)

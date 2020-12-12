@@ -57,7 +57,7 @@ int NSQL::Connect() {
     switch (SQLDriverConnect(sqlConnHandle,
         NULL,
         //(SQLWCHAR*)L"DRIVER={SQL Server};SERVER=localhost, 1433;DATABASE=master;UID=username;PWD=password;",
-        (SQLCHAR*)"DRIVER={SQL Server};SERVER=localhost, 1433;DATABASE=VoiceUp_DBS;Trusted=true;",
+        (SQLWCHAR*)L"DRIVER={SQL Server};SERVER=localhost, 1433;DATABASE=VoiceUp_DBS;Trusted=true;",
         SQL_NTS,
         retconstring,
         1024,
@@ -99,7 +99,7 @@ int NSQL::Connect() {
 
 
 // below is the input from sql for a int output 
-int NSQL::statement(SQLCHAR* statement, int output[], int row) {
+int NSQL::statement(SQLWCHAR* statement, int output[], int row) {
 
     ErrorLog << "\nstatement(SQLCHAR* statement, int output[], int row)++++++++++++\n\n";
 
@@ -172,7 +172,7 @@ int NSQL::statement(SQLCHAR* statement, int output[], int row) {
 
 
 // below is the input from sql for a string output 
-int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
+int NSQL::statement(SQLWCHAR* statement, std::string& output, int row) {
     ErrorLog << "\nstatement(SQLCHAR* statement, std::string& output, int row)++++++++++\n\n";
 
     // ensures sql worked
@@ -181,13 +181,12 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
         ErrorLog << "fail in request \n";
         return Fail;
     }
-
     // If works get data
     else {
-
+        ErrorLog << "True in request \n";
         //declare output variable and pointer
-        char sqltake[200];
-        SQLINTEGER ptrSqltake;
+        char sqltake[500];
+        SQLLEN ptrSqltake;
 
         // check data is  fetched
         if (SQLFetch(sqlStmtHandle) != SQL_SUCCESS) {
@@ -203,8 +202,10 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
                         if (sqltake[i + 1] != NULL)
                             output += sqltake[i];
 
-                        else
+                        else {
+                            output += sqltake[i];
                             break;
+                        }
                     }
                 }
                 else
@@ -234,11 +235,11 @@ int NSQL::statement(SQLCHAR* statement, std::string& output, int row) {
 
 
 // below is the code for inserting data user
-int NSQL::statementW(SQLCHAR* statement, structures::User input) {
+int NSQL::statementW(SQLWCHAR* statement, structures::User input) {
     ErrorLog << "\nstatementW(SQLCHAR* statement, User input)++++++++++\n\n";
 
     // set in all the values (tailored for user)
-    int retcode;
+    //int retcode;
     int Age = input.Age;
     int UserID = input.UserID;
     std::string Username = input.Username;
@@ -336,7 +337,7 @@ int NSQL::statementW(SQLCHAR* statement, structures::User input) {
 
 
 // below is the statements to recive a whole row of users. you can only get one row
-int NSQL::statement(SQLCHAR* statement, structures::User& output) {
+int NSQL::statement(SQLWCHAR* statement, structures::User& output) {
     ErrorLog << "\nstatement(SQLCHAR* statement, User& output)++++++++++\n\n";
 
     // ensures sql worked
@@ -353,7 +354,7 @@ int NSQL::statement(SQLCHAR* statement, structures::User& output) {
         }
         // intialise temp variables for string
         char sqltake[200];
-        SQLINTEGER ptrSqltake;
+        SQLLEN ptrSqltake;
 
 
         if (SQL_SUCCESS == SQLGetData(sqlStmtHandle, 2, SQL_C_DEFAULT, &sqltake, SQL_RESULT_LEN, &ptrSqltake)) {

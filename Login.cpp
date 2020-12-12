@@ -40,7 +40,7 @@ void Login::GetNames(std::string names[]) {
 	std::string sqlout;
 	std::string temp;
 	Getnames.Connect();
-	if (1 != Getnames.statement((SQLCHAR*)"SELECT Username FROM Users ", sqlout)) {
+	if (1 != Getnames.statement((SQLWCHAR*)L"SELECT Username FROM Users ", sqlout)) {
 		ErrorLog2 << "\n\n COLUD NOT DO STATEMENT FOR LOGIN GETNAMES \n\n";
 		Getnames.Disconnect_from_sql();
 		ErrorLog2.close();
@@ -48,9 +48,9 @@ void Login::GetNames(std::string names[]) {
 	}
 	else {
 		for (int i = 0; i < sqlout.length()+1; i++) {
-			if ( i%8 ==0 && i>0) {
+			if ( i%9 ==0 && i>0) {
 				temp += sqlout[i];
-				names[(i/8)-1] = temp;
+				names[(i/9)-1] = temp;
 				temp = "";
 				ErrorLog2 << "names written\n";
 
@@ -82,7 +82,7 @@ void Login::GetNames(std::string names[]) {
 
 	NSQL temp;
 	temp.Connect();
-	temp.statementW((SQLCHAR*)"INSERT INTO dbo.Users([UserID],[Username],[Sex],[Sing_Type],[Age]) VALUES (?,?,?,?,?)", output);
+	temp.statementW((SQLWCHAR*)"INSERT INTO dbo.Users([UserID],[Username],[Sex],[Sing_Type],[Age]) VALUES (?,?,?,?,?)", output);
 	temp.Disconnect_from_sql();
 	// setting this as main user
 	structures::SetMainUser(output);
@@ -112,7 +112,7 @@ void Login::GetNames(std::string names[]) {
 	 open.Connect();
 	 switch (ID) {
 	 case 1:
-		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 1", setting))
+		 if (1 == open.statement((SQLWCHAR*)L"SELECT * FROM Users WHERE UserID = 1", setting))
 			 structures::SetMainUser(setting);
 		 else
 			 return;
@@ -120,7 +120,7 @@ void Login::GetNames(std::string names[]) {
 
 
 	 case 2:
-		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 2", setting))
+		 if (1 == open.statement((SQLWCHAR*)L"SELECT * FROM Users WHERE UserID = 2", setting))
 			 structures::SetMainUser(setting);
 		 else
 			 return;
@@ -128,7 +128,7 @@ void Login::GetNames(std::string names[]) {
 
 
 	 case 3:
-		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 3", setting))
+		 if (1 == open.statement((SQLWCHAR*)L"SELECT * FROM Users WHERE UserID = 3", setting))
 			 structures::SetMainUser(setting);
 		 else
 			 return;
@@ -136,7 +136,7 @@ void Login::GetNames(std::string names[]) {
 
 
 	 case 4:
-		 if (1 == open.statement((SQLCHAR*)"SELECT * FROM Users WHERE UserID = 4", setting))
+		 if (1 == open.statement((SQLWCHAR*)L"SELECT * FROM Users WHERE UserID = 4", setting))
 			 structures::SetMainUser(setting);
 		 else
 			 return;

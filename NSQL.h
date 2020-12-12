@@ -20,7 +20,7 @@ private:
     SQLHANDLE sqlEnvHandle;
     SQLHANDLE sqlConnHandle;
     SQLHANDLE sqlStmtHandle;
-    SQLCHAR retconstring[SQL_RETURN_CODE_LEN];
+    SQLWCHAR retconstring[SQL_RETURN_CODE_LEN];
     
     // error logging
     std::ofstream ErrorLog;
@@ -38,17 +38,17 @@ public:
     // get statement data for ints, can get multiple
     // if multiple column ints are set as pairs
     // numbers split by 0
-    int statement(SQLCHAR* statement, int output[], int row = 1);
+    int statement(SQLWCHAR* statement, int output[], int row = 1);
     // gets statement data for strings, can get multiple
     // if multiple column string are set as pairs
     // every string is the max len staored in sql for that string
-    int statement(SQLCHAR* statement, std::string& output, int row = 1);
+    int statement(SQLWCHAR* statement, std::string& output, int row = 1);
 
 
     // the statement below is to insert data for user
-    int statementW(SQLCHAR* statement, structures::User input);
+    int statementW(SQLWCHAR* statement, structures::User input);
     //gets entire row for user, can only get one row
-    int statement(SQLCHAR* statement, structures::User& output);
+    int statement(SQLWCHAR* statement, structures::User& output);
     // 
 
 };
