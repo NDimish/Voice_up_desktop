@@ -1,3 +1,4 @@
+// this is the fre etune header file
 #include "import.h"
 #include "Vmain.h"
 class Free_tune
@@ -13,6 +14,7 @@ public:
 	// functions
 	void AudioCheck();
 
+	static void noteout(float HZ);
 
 };
 

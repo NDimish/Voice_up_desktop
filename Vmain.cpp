@@ -46,12 +46,13 @@ END_EVENT_TABLE()
 
 Vmain::Vmain(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(40, 30), wxSize(250, 450))
 {
-
+	
 	// clear error log
 	std::ofstream ErrorLog;
 	ErrorLog.open("ErrorLog.txt", std::ofstream::out);
 	ErrorLog << "\nNew start ============================================================\n\n\n\n";
 	ErrorLog.close();
+	Error_screens::Error_log("Hello i work \n");
 	// sett all 0o[pen windows to false
 	structures::SetOpenWindows(9,false);
 	//wxPanel* x = new wxPanel(this, wxID_ANY);
@@ -140,6 +141,7 @@ Vmain::Vmain(const wxString& title) : wxFrame(nullptr, wxID_ANY, title, wxPoint(
 
 	wxBoxSizer* hbox = new wxBoxSizer(wxHORIZONTAL);
 
+
 	wxFlexGridSizer* SizerMenu = new wxFlexGridSizer(7, 3, 20, 10);
 	SizerMenu->Add(new wxSizerItem);
 	SizerMenu->Add(ButtonLogin, 1, wxALL | wxEXPAND);
@@ -181,17 +183,39 @@ Vmain::~Vmain() {}
 
 //functions
 void Vmain::OnExit(wxCommandEvent& event) {
-	
+
+	// for desktop version cvlosing extra windows
+	//not working
+	/*
+	if (structures::GetOpenwindows(4) == true) {
+		tester->OnExit();
+	}
+
+	if (structures::GetOpenwindows(3) == true) {
+		Graph->OnExit();
+	}
+
+	if (structures::GetOpenwindows(2) == true) {
+		Voicetune->OnExit();
+	}
+
+	if (structures::GetOpenwindows(0) == true) {
+		login1->OnExit();
+	}*/
+
 	Close(true); // closes the program
 	Sleep(100);
-	
+
+
+
 }
 
 void Vmain::LoginMain(wxCommandEvent& event) {
 	//panel_sizer->Hide(pane2);
 	//panel_sizer->Show(pane1);
-	login_frame_a* login = new login_frame_a("login screen 1");
-	login->Show();
+	login1 = new login_frame_a("login screen 1");
+	login1->Show();
+	structures::SetOpenWindows(0);
 	//SetTopWindow(login);
 }
 
@@ -204,7 +228,7 @@ void Vmain::VoiceTuner(wxCommandEvent& event) {
 	Voicetune = new Voice_Tuner_frame("Voice Tuner");
 	Voicetune->Show();
 	// set window to open
-	structures::SetOpenWindows(1);
+	structures::SetOpenWindows(2);
 }
 
 void Vmain::Voice_Tests(wxCommandEvent& event) {
@@ -221,10 +245,13 @@ void Vmain::Voice_Tests(wxCommandEvent& event) {
 	tester->Show();
 
 	// set window to open
-	structures::SetOpenWindows(2);
+	structures::SetOpenWindows(4);
 }
 
 void Vmain::Voice_Lessosn(wxCommandEvent& event) {
+
+	Error_screens* Error = new Error_screens(2);
+	// to be done
 	//check if window open
 	//if (structures::GetOpenwindows(3))
 	//	return;
@@ -244,6 +271,7 @@ void Vmain::Graphing__(wxCommandEvent& event) {
 	//check if window open
 	//if (structures::GetOpenwindows(4))
 	//	return;
+	// in constructor check if usere there
 	Error_screens* Error = new Error_screens(1);
 	if (Error->Get_check()== false)
 		return;
@@ -251,7 +279,7 @@ void Vmain::Graphing__(wxCommandEvent& event) {
 	Graph = new Graph_frames("Graphing module");
 	Graph->Show();
 	// set window to open
-	structures::SetOpenWindows(4);
+	structures::SetOpenWindows(3);
 }
 
 // Main end ==================================================================
@@ -319,7 +347,7 @@ login_frame_a::login_frame_a(const wxString& title) : wxFrame(nullptr, wxID_ANY,
 		}
 		else {
 			Button[i] = new wxBitmapButton(login_a, UserButton+i, bitmap[i], wxPoint(50, 95*(i)+25), wxSize(100, 70), 0);
-			wxStaticText* stnmae = new wxStaticText(login_a, wxID_ANY, Usernames[i], wxPoint(70, 95 * (i)+96), wxDefaultSize, wxALIGN_CENTRE);
+			wxStaticText* stnmame = new wxStaticText(login_a, wxID_ANY, Usernames[i], wxPoint(70, 95 * (i)+96), wxDefaultSize, wxALIGN_CENTRE);
 			ErrorLog1 << "\n\nUsernames captcha ============================================================\n\n";
 			ErrorLog1 << "buttoned" << Usernames[i];
 			IDnum += 1;
@@ -339,10 +367,18 @@ login_frame_a::login_frame_a(const wxString& title) : wxFrame(nullptr, wxID_ANY,
 void login_frame_a::Registering(wxCommandEvent& event) {
 	//panel_sizer->Hide(pane2);
 	//panel_sizer->Show(pane1);
+	/// unused functionality
+	structures::SetOpenWindows(0, false);
+
 	Close(true);
 	login_frame_b* Register = new login_frame_b("login screen 2",IDnum);
 	Register->Show();
 	//SetTopWindow(login);
+}
+
+void login_frame_a::OnExit() {
+	Close(true);
+	structures::SetOpenWindows(0, false);
 }
 
 // set user whewn buttons clicked
@@ -399,7 +435,7 @@ login_frame_b::login_frame_b(const wxString& title, int Idnum) : wxFrame(nullptr
 
 
 
-	wxStaticText* st1 = new wxStaticText(login_b, wxID_ANY, "Username", wxPoint(10, 10), wxDefaultSize, wxALIGN_CENTRE);
+	wxStaticText* st1 = new wxStaticText(login_b, wxID_ANY, "Username\n10 Char Max", wxPoint(10, 10), wxDefaultSize, wxALIGN_CENTRE);
 	TextboxUsername = new wxTextCtrl(login_b, wxID_ANY, "hi!", wxPoint(100, 10), wxSize(100, 20), wxTE_MULTILINE | wxTE_RICH, wxDefaultValidator, wxTextCtrlNameStr);
 
 
@@ -442,7 +478,7 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 	// gets value
 	newUser.Username = TextboxUsername->GetValue();
 	// checks value is valid 
-	if (newUser.Username.length() == 0 || newUser.Username.length() >6) {
+	if (newUser.Username.length() == 0 || newUser.Username.length() >9) {
 		wxStaticText* st5 = new wxStaticText(login_b, wxID_ANY, "Error in your regestration ( Username )", wxPoint(10, 190), wxDefaultSize, wxALIGN_CENTRE);
 		OutputError(st5);
 		return;
@@ -462,10 +498,6 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 		newUser.Sex = 'M';
 
 
-
-
-
-
 	// checks dropdown choosen
 	if ((char)DropdownSing_Type->GetCurrentSelection() == 'ÿ') {
 		wxStaticText* st5 = new wxStaticText(login_b, wxID_ANY, "Error in your regestration ( Sing )          ", wxPoint(10, 190), wxDefaultSize, wxALIGN_CENTRE);
@@ -478,9 +510,8 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 	newUser.SingType = y[0];
 
 	
-
 	// validation for age input
-	if ((char)DropdownAge_Tens->GetCurrentSelection() == 'ÿ' || (char)DropdownAge_Units->GetCurrentSelection() == 'ÿ') {
+	if ((char)DropdownAge_Tens->GetCurrentSelection() == 'ÿ' || (char)DropdownAge_Units->GetCurrentSelection() == 'ÿ'|| DropdownAge_Units->GetCurrentSelection() == 0) {
 		wxStaticText* st5 = new wxStaticText(login_b, wxID_ANY, "Error in your regestration ( Age )           ", wxPoint(10, 190), wxDefaultSize, wxALIGN_CENTRE);
 		OutputError(st5);
 		return;
@@ -490,7 +521,6 @@ void login_frame_b::SaveNewUser(wxCommandEvent& event) {
 	newUser.Age = x * 10;
 	x = DropdownAge_Units->GetCurrentSelection();
 	newUser.Age += x;
-
 
 
 	//wxStaticText* st5 = new wxStaticText(login_b, wxID_ANY,(char)newUser.Age , wxPoint(70, 190), wxDefaultSize, wxALIGN_CENTRE);
@@ -602,6 +632,10 @@ Voice_Tuner_frame::Voice_Tuner_frame(const wxString& title): wxFrame(nullptr, wx
 /*void Voice_Tuner_frame::OnExit(wxCommandEvent& event) {
 	Close(true);
 }*/
+void Voice_Tuner_frame::OnExit() {
+
+	Remote->OnExit();
+}
 
 
 
@@ -651,16 +685,18 @@ TuneRemote::TuneRemote(wxPanel* parent,Light_screen* lights, std::thread* thread
 	  Note->SetBackgroundColour(wxT("#C311D6"));
 }
 
+
+
 // functions for remote
 // below functions to change note or actave. if on max start from min and vice versa
 void TuneRemote::Change_note_up(wxCommandEvent& event) {
 
 	delete Note;
-	if (noteid ==  11 && octaveid !=9) {
+	if (noteid ==  11 && octaveid !=8) {
 		noteid = 0;
 		octaveid +=1;
 	}
-	else if (noteid == 11 && octaveid == 9) {
+	else if (noteid == 11 && octaveid == 8) {
 		noteid = 0;
 		octaveid =0;
 	
@@ -682,7 +718,7 @@ void TuneRemote::Change_note_Down(wxCommandEvent& event) {
 	}
 	else if (noteid == 0 && octaveid == 0) {
 		noteid = 0;
-		octaveid = 9;
+		octaveid = 8;
 
 	}
 	else
@@ -697,7 +733,7 @@ void TuneRemote::Change_note_Down(wxCommandEvent& event) {
 void TuneRemote::Change_Octave_up(wxCommandEvent& event) {
 
 	delete Note;
-	if ( octaveid == 9) {
+	if ( octaveid == 8) {
 		octaveid =0;
 	}
 	else
@@ -713,7 +749,7 @@ void TuneRemote::Change_Octave_Down(wxCommandEvent& event) {
 
 	delete Note;
 	if (octaveid == 0) {
-		octaveid = 9;
+		octaveid = 8;
 	}
 	else
 		octaveid -= 1;
@@ -729,8 +765,22 @@ void TuneRemote::OnExit(wxCommandEvent& event) {
 	//structures::SetOpenWindows(3, false);
 	(*LightScreen).exit = true;
 	frame->Close(true);
-	Sleep(1250);
+	Sleep(500);
 	Toclose -> detach();
+	//unused thing
+	structures::SetOpenWindows(2, false);
+}
+
+void TuneRemote::OnExit() {
+	// function below deemed invalid but here for tests( used for check which windows are open)
+	//structures::SetOpenWindows(3, false);
+	// unused functionality 
+	structures::SetOpenWindows(2, false);
+
+	(*LightScreen).exit = true;
+	frame->Close(true);
+	Sleep(500);
+	Toclose->detach();
 }
 
 void TuneRemote::setframe(wxFrame* frame_m) {
@@ -744,7 +794,7 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 	// ensure the exit is false so the audio starts
 	exit = false;
 
-	this->SetBackgroundColour(wxT("#C311D6"));
+	this->SetBackgroundColour(wxT("#F15DFA"));
 	m_parent = parent;
 
 	// below is testing
@@ -754,9 +804,9 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 	//light set 1
 	Lightset1[0] = new wxLed(this, wxID_ANY, wxPoint(210, 87.5), wxSize(50,50), wxColour(00, 255, 00));
 	Lightset1[0]->Disable();
-	Lightset1[1] = new wxLed(this, wxID_ANY, wxPoint(140, 87.5), wxSize(50, 50), wxColour(20, 48, 226));
+	Lightset1[1] = new wxLed(this, wxID_ANY, wxPoint(140, 87.5), wxSize(50, 50), wxColour(253, 246, 00));
 	Lightset1[1]->Disable();
-	Lightset1[2] = new wxLed(this, wxID_ANY, wxPoint(80, 87.5), wxSize(50, 50), wxColour(255, 00, 230));
+	Lightset1[2] = new wxLed(this, wxID_ANY, wxPoint(80, 87.5), wxSize(50, 50), wxColour(253, 150, 00));
 	Lightset1[2]->Disable();
 	Lightset1[3] = new wxLed(this, wxID_ANY, wxPoint(20, 87.5), wxSize(50, 50), wxColour(226, 20, 20));
 	Lightset1[3]->Disable();
@@ -764,9 +814,9 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 	//light set 2
 	Lightset2[0] = new wxLed(this, wxID_ANY, wxPoint(380, 87.5), wxSize(50, 50), wxColour(00, 255, 00));
 	Lightset2[0]->Disable();
-	Lightset2[1] = new wxLed(this, wxID_ANY, wxPoint(440, 87.5), wxSize(50, 50), wxColour(20, 48, 226));
+	Lightset2[1] = new wxLed(this, wxID_ANY, wxPoint(440, 87.5), wxSize(50, 50), wxColour(253, 246, 00));
 	Lightset2[1]->Disable();
-	Lightset2[2] = new wxLed(this, wxID_ANY, wxPoint(500, 87.5), wxSize(50, 50), wxColour(255, 00, 230));
+	Lightset2[2] = new wxLed(this, wxID_ANY, wxPoint(500, 87.5), wxSize(50, 50), wxColour(253, 150, 00));
 	Lightset2[2]->Disable();
 	Lightset2[3] = new wxLed(this, wxID_ANY, wxPoint(550, 87.5), wxSize(50, 50), wxColour(226, 20, 20));
 	Lightset2[3]->Disable();
@@ -779,6 +829,7 @@ Light_screen::Light_screen(wxPanel* parent) : wxPanel(parent, -1, wxPoint(-1, -1
 
 
 void Light_screen::Lights(int lightsnum){
+	// if the lights num same as before skip
 	if (lightsnum == Lightson)
 		return;
 	// all below is testing in comment
@@ -798,11 +849,7 @@ void Light_screen::Lights(int lightsnum){
 
 	// if voice is perfec (9) two lights show
 	if (lightsnum == 9) {
-		//for (int i = 1; i < 4; i++) {
-			/*if ((*Lightset1[i]).on != false)
-				Lightset1[i]->Disable();
-			if ((*Lightset2[i]).on != false)
-				Lightset2[i]->Disable();*/
+
 			Lightset1[0]->Enable();
 			Lightset2[0]->Enable();
 		//}
@@ -812,26 +859,14 @@ void Light_screen::Lights(int lightsnum){
 
 	// enabling the right side lights
 	else if (lightsnum < 5) {
-		//disable other side
-		/*for (int i = 0; i < 4; i++) {
-			//if ((*Lightset2[i]).on == true)
-				Lightset2[i]->Disable();
 
-		}*/
 			for (int i = 0; i < lightsnum; i++) {
 				// only do if it is false
 				//if ((*Lightset1[i]).on == false) {
 					Lightset1[i]->Enable();
 					//Lightset1[i]->Enable();
 			}
-				// for smooth overlap
-				/*for (int i = 0; i < 4-lightsnum; i++) {
-					// only do if it is false
-					if ((*Lightset1[3 - i]).on == true) {
-						Lightset1[3 - i]->Disable();
-						//Lightset1[i]->Enable();
-					}
-				}*/
+
 		
 			// show change
 			Refresh();
@@ -840,26 +875,14 @@ void Light_screen::Lights(int lightsnum){
 
 	// enabling left side lights
 	else {
-		//disable other side
-		/*for (int i = 0; i < 4; i++) {
-			if ((*Lightset1[i]).on == true)
-				Lightset1[i]->Disable();
 
-		}*/
 		for (int i = 0; i < lightsnum-4; i++) {
 			//if ((*Lightset2[i]).on == false) {
 				Lightset2[i]->Enable();
 				//Lightset2[i]->Enable()};
 			
 		}
-		// disabling to make it smoother
-		/*for (int i = 0;  i < 8-lightsnum; ) {
-			// only do if it is false
-			if ((*Lightset2[3 - i]).on == true) {
-				Lightset2[3 - i]->Disable();
-				//Lightset1[i]->Enable();
-			}
-		}*/
+
 		// show change
 		Refresh();
 	}
@@ -868,7 +891,7 @@ void Light_screen::Lights(int lightsnum){
 
 void Light_screen::playingnote(wxCommandEvent& event) {
 
-	//Light_screen::Lights();
+	Free_tune::noteout(Notefrequency);
 }
 
 
@@ -919,9 +942,11 @@ Voice_Tests_frame::Voice_Tests_frame(const wxString& title) : wxFrame(nullptr, w
 	// array of buttons for tests
 	wxButton* Button[21];
 	std::string Names[21];
+	//char colour[21];
 	std::ofstream ErrorLog1;
 	ErrorLog1.open("ErrorLog.txt", std::ofstream::out | std::ofstream::app);
 	Tests_backend::Get_tests_names(Names);
+	//Tests_backend::Get_tests_colour(colour);
 	for (int i = 0; i < 21; i++) {
 		// when all names are outputted
 		if (Names[i] == "") {
@@ -939,13 +964,16 @@ Voice_Tests_frame::Voice_Tests_frame(const wxString& title) : wxFrame(nullptr, w
 			Connect(onwards+i, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Voice_Tests_frame::TestRun));
 			// temp to show colours
 			sizer->Add(Button[i], 0, wxALL, 3);
+			// if (colour[i] == 'r'){
+			// if (colour[i] == 'o'){
+			// if (colour[i] == 'G'){
 			if (i == 0 || i== 4 || i ==5) {
 				Button[i]->SetBackgroundColour(wxT("#89EE36"));
 			}
-			if (i == 1 || i ==2 ) {
+			if (i == 9 || i ==2 ) {
 				Button[i]->SetBackgroundColour(wxT("#EEE936"));
 			}
-			if (i == 6 || i ==3) {
+			if (i == 1 || i ==3) {
 				Button[i]->SetBackgroundColour(wxT("#EE5736"));
 			}
 			ErrorLog1 << "\n\nTestsNames captcha ============================================================\n\n";
@@ -966,7 +994,13 @@ Voice_Tests_frame::Voice_Tests_frame(const wxString& title) : wxFrame(nullptr, w
 //functions
 void Voice_Tests_frame::OnExit(wxCommandEvent& event) {
 	// function below deemed invalid but here for tests( used for check which windows are open)
-	structures::SetOpenWindows(4, false);
+	structures::SetOpenWindows(3, false);
+	Close(true);
+}
+
+void Voice_Tests_frame::OnExit() {
+	// function below deemed invalid but here for tests( used for check which windows are open)
+	structures::SetOpenWindows(3, false);
 	Close(true);
 }
 
@@ -988,13 +1022,18 @@ Voice_game::Voice_game(int DataID):wxFrame(nullptr, wxID_ANY, (wxString)"Game "<
 
 	Gamepanel = new wxPanel(this, wxID_ANY);
 	Gamepanel->SetBackgroundColour(wxT("#C311D6"));
-
+	wxButton* Gameexit = new wxButton(Gamepanel, Exit,"Exit Game", wxPoint(750, 150));
+	Connect(Exit, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Voice_game::OnExit));
+	Gameexit->SetBackgroundColour(wxT("#D92C2C"));
 }
 
 void Voice_game::RunExitScoreWindow(int score) {
 	return;
 }
 
+void Voice_game::OnExit(wxCommandEvent& event) {
+	Close();
+}
 
 // Tests tuner end ======================================================
 
@@ -1172,6 +1211,17 @@ void Graph_frames::OnExit(wxCommandEvent& event) {
 	Close(true);
 }
 
+void Graph_frames::OnExit() {
+
+	Error_screens::Error_log("Graphs end ==============================================");
+	this -> ~Graph_frames();
+	// function below deemed invalid but here for tests( used for check which windows are open)
+	structures::SetOpenWindows(4, false);
+	Close(true);
+}
+
+
+
 
 
 
@@ -1188,9 +1238,25 @@ void Graph_frames::OnExit(wxCommandEvent& event) {
 
 // error screens ==========================================
  Error_screens::Error_screens(int choice) : wxFrame(nullptr, wxID_ANY, "no user here", wxPoint(30, 40), wxSize(300, 200)) {
+	 if (choice == 2) {
+		 check = false;
+		 wxPanel* Error = new wxPanel(this, wxID_ANY);
+		 Error->SetBackgroundColour(wxT("#C311D6"));
+		 wxStaticText* st1 = new wxStaticText(Error, wxID_ANY, "  Under construction  ", wxPoint(50, 10), wxDefaultSize, wxALIGN_CENTRE);
+		 exit = new wxButton(Error, Exit_error, "Exit", wxPoint(50, 30));
+		 exit->SetBackgroundColour(wxT("#FF0000"));
+		 Connect(Exit_error, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(Error_screens::close_error));
 
-	 this->SetBackgroundColour(wxT("#C311D6"));
-	Check_Mainuser_active();
+
+		 this->Show();
+
+	 }
+	 else if (choice == 1) {
+		 this->SetBackgroundColour(wxT("#C311D6"));
+		 Check_Mainuser_active();
+	 }
+	 else
+		 return;
 }
 
 

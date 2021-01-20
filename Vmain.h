@@ -15,6 +15,7 @@ class Graph_frames;
 class Voice_Tuner_frame;
 class Error_screens;
 class Voice_Tests_frame;
+class login_frame_a;
 // main menue class runs when called 
 class Vmain : public wxFrame
 {
@@ -35,6 +36,8 @@ private:
 	Voice_Tests_frame* tester;
 	Voice_Tests_frame* Lesson;
 	Graph_frames* Graph;
+	login_frame_a* login1;
+
 
 	
 public:
@@ -78,6 +81,7 @@ public:
 	void User3(wxCommandEvent& event);
 	void User4(wxCommandEvent& event);
 	void Registering(wxCommandEvent& event);
+	void OnExit();
 
 	DECLARE_EVENT_TABLE()
 
@@ -174,6 +178,8 @@ public:
 
 
 // remote------------------------
+// declare the line: class function above code not working if link error 1141 appears
+//like so
 class wxPanel;
 class TuneRemote : public wxPanel
 {
@@ -203,6 +209,8 @@ public:
 	void Change_Octave_up(wxCommandEvent& event);
 	void Change_Octave_Down(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
+	// no events
+	void OnExit();
 	void setframe(wxFrame* frame_m);
 
 
@@ -228,7 +236,7 @@ public:
 	
 	// contructor
 	Voice_Tuner_frame(const wxString& title);
-	//void OnExit(wxCommandEvent& event);
+	void OnExit();
 
 
 	DECLARE_EVENT_TABLE()
@@ -257,6 +265,8 @@ public:
 	//functions
 	void OnExit(wxCommandEvent& event);
 	void TestRun(wxCommandEvent& event);
+	// no events
+	void OnExit();
 
 };
 
@@ -272,6 +282,7 @@ private:
 public:
 	Voice_game(int DataID);
 	void RunExitScoreWindow(int score);
+	void OnExit(wxCommandEvent& event);
 };
 
 //=============================================
@@ -314,6 +325,8 @@ public:
 	void Buttonevent6(wxCommandEvent& event);
 	void Back(wxCommandEvent& event);
 	void OnExit(wxCommandEvent& event);
+	// no events
+	void OnExit();
 
 	DECLARE_EVENT_TABLE()
 

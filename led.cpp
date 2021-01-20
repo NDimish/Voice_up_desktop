@@ -111,9 +111,9 @@ void wxLed::SetBitmap(wxString color)
     // width height num_colors chars_per_pixel
     sprintf(xpm[0], "%d %d %d 1", WX_LED_WIDTH, WX_LED_HEIGHT, WX_LED_COLORS);
     // colors
-    strncpy(xpm[1], "  c #C311D6", WX_LED_XPM_COLS);
-    strncpy(xpm[2], "- c #C311D6", WX_LED_XPM_COLS);
-    strncpy(xpm[3], "_ c #C311D6", WX_LED_XPM_COLS);
+    strncpy(xpm[1], "  c #F15DFA", WX_LED_XPM_COLS);
+    strncpy(xpm[2], "- c #F15DFA", WX_LED_XPM_COLS);
+    strncpy(xpm[3], "_ c #F15DFA", WX_LED_XPM_COLS);
     strncpy(xpm[4], "* c #FFFFFF", WX_LED_XPM_COLS);
     strncpy(xpm[WX_LED_COLORS], "X c ", WX_LED_XPM_COLS);
     strncpy((xpm[WX_LED_COLORS]) + 4, color.char_str(), 8);

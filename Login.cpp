@@ -49,7 +49,7 @@ void Login::GetNames(std::string names[]) {
 	else {
 		for (int i = 0; i < sqlout.length()+1; i++) {
 			if ( i%9 ==0 && i>0) {
-				temp += sqlout[i];
+				temp += sqlout[i]; 
 				names[(i/9)-1] = temp;
 				temp = "";
 				ErrorLog2 << "names written\n";
@@ -82,7 +82,7 @@ void Login::GetNames(std::string names[]) {
 
 	NSQL temp;
 	temp.Connect();
-	temp.statementW((SQLWCHAR*)"INSERT INTO dbo.Users([UserID],[Username],[Sex],[Sing_Type],[Age]) VALUES (?,?,?,?,?)", output);
+	temp.statementW((SQLWCHAR*)L"INSERT INTO dbo.Users([UserID],[Username],[Sex],[Sing_Type],[Age]) VALUES (?,?,?,?,?)", output);
 	temp.Disconnect_from_sql();
 	// setting this as main user
 	structures::SetMainUser(output);

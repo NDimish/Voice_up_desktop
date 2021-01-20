@@ -114,15 +114,15 @@ int NSQL::statement(SQLWCHAR* statement, int output[], int row) {
     else {
 
         //declare output variable and pointer
-        int sqltake;
-        int available = 0;
-        SQLLEN ptrSqltake;
+        int sqltake;// for raw data
+        int available = 0;// counter to check if data available
+        SQLLEN ptrSqltake;// for buffer
 
         // check data is fetched
         if (SQLFetch(sqlStmtHandle) != SQL_SUCCESS) {
             ErrorLog << "fetch fail\n";
             return Fail;
-        }
+        }// check if the code can get the statement
 
         // the code below is to repeate if a user wants more than one column
 

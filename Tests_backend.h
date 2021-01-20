@@ -8,6 +8,7 @@ private:
 public:
 	// get the names of all the test to output buttons
 	static void Get_tests_names(std::string* check);
+	static void Get_tests_colour(std::string* check);
 	// gets the test data of the test to be played
 	static structures::Block* Get_test_data(int TestID);
 };
